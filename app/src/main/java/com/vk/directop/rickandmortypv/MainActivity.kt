@@ -9,6 +9,10 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
 import com.vk.directop.rickandmortypv.databinding.ActivityMainBinding
+import com.vk.directop.rickandmortypv.presentation.CharactersFragment
+import com.vk.directop.rickandmortypv.presentation.EpisodesFragment
+import com.vk.directop.rickandmortypv.presentation.LocationsFragment
+import com.vk.directop.rickandmortypv.presentation.SplashFragment
 
 private const val LAST_SELECTED_ITEM = "item"
 private var received = 0

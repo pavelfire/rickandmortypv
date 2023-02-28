@@ -1,10 +1,11 @@
-package com.vk.directop.rickandmortypv
+package com.vk.directop.rickandmortypv.presentation
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
 
 // TODO: Rename parameter arguments, choose names that match
@@ -14,10 +15,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [CharactersFragment.newInstance] factory method to
+ * Use the [EpisodesFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class CharactersFragment : Fragment() , HasCustomTitle{
+class EpisodesFragment : Fragment(), HasCustomTitle {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -35,10 +36,10 @@ class CharactersFragment : Fragment() , HasCustomTitle{
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_characters, container, false)
+        return inflater.inflate(R.layout.fragment_episodes, container, false)
     }
 
-    override fun getTitleRes(): Int = R.string.characters
+    override fun getTitleRes(): Int = R.string.episodes
 
     companion object {
         /**
@@ -47,12 +48,12 @@ class CharactersFragment : Fragment() , HasCustomTitle{
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment CharactersFragment.
+         * @return A new instance of fragment EpisodesFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            CharactersFragment().apply {
+            EpisodesFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
