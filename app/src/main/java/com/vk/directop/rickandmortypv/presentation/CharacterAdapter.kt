@@ -1,11 +1,12 @@
 package com.vk.directop.rickandmortypv.presentation
 
-import android.util.Log.i
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.data.remote.data_transfer_object.CharacterRM
 import com.vk.directop.rickandmortypv.databinding.CharacterItemBinding
 
@@ -46,6 +47,16 @@ class CharacterAdapter : RecyclerView.Adapter<CharacterAdapter.CharacterViewHold
             val characterRM = characters[position]
             tv1.text = characterRM.name
             tv2.text = characterRM.gender
+            if (characterRM.image.isNotBlank()) {
+                Glide.with(img1.context)
+                    .load(characterRM.image)
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_characters)
+                    .error(R.drawable.ic_error_load)
+                    .into(img1)
+            } else {
+                img1.setImageResource(R.drawable.ic_characters)
+            }
         }
     }
 
