@@ -2,19 +2,16 @@ package com.vk.directop.rickandmortypv.presentation
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
 import com.vk.directop.rickandmortypv.data.RetrofitInstance
-import com.vk.directop.rickandmortypv.data.remote.dto.CharacterRM
-import com.vk.directop.rickandmortypv.data.remote.dto.Location
-import com.vk.directop.rickandmortypv.data.remote.dto.Origin
 import com.vk.directop.rickandmortypv.databinding.FragmentCharactersBinding
 import retrofit2.HttpException
 import java.io.IOException
@@ -69,8 +66,8 @@ class CharactersFragment : Fragment(), HasCustomTitle {
                 return@launchWhenCreated
             }
             if (response.isSuccessful && response.body() != null) {
-                Log.d("TAG", response.body()!!.toString())
-                //characterAdapter.characters = response.body()!!
+                //Log.d("TAG", response.body()!!.toString())
+                characterAdapter.characters = response.body()!!.results
             }else{
                 Log.d("TAG", "Response not successful")
             }

@@ -1,6 +1,6 @@
-package com.vk.directop.rickandmortypv.data.remote.dto
+package com.vk.directop.rickandmortypv.data.remote.data_transfer_object
 
-data class CharacterRMu(
+data class CharacterRM(
     val created: String,
     val episode: List<String>,
     val gender: String,

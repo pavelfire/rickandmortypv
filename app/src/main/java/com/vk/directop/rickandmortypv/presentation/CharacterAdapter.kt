@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.vk.directop.rickandmortypv.data.remote.dto.CharacterRM
+import com.vk.directop.rickandmortypv.data.remote.data_transfer_object.CharacterRM
 import com.vk.directop.rickandmortypv.databinding.CharacterItemBinding
 
 class CharacterAdapter : RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder>() {
