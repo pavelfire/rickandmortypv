@@ -1,25 +1,29 @@
 package com.vk.directop.rickandmortypv.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
+import com.vk.directop.rickandmortypv.data.RetrofitInstance
+import com.vk.directop.rickandmortypv.databinding.FragmentLocationsBinding
+import retrofit2.HttpException
+import java.io.IOException
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LocationsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LocationsFragment : Fragment(), HasCustomTitle {
-    // TODO: Rename and change types of parameters
+
+    private lateinit var binding: FragmentLocationsBinding
+    private lateinit var locationAdapter: LocationAdapter
+
     private var param1: String? = null
     private var param2: String? = null
 
@@ -35,22 +39,49 @@ class LocationsFragment : Fragment(), HasCustomTitle {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_locations, container, false)
+
+        binding = FragmentLocationsBinding.inflate(inflater)
+
+        setupRecyclerView()
+
+        lifecycleScope.launchWhenCreated {
+            binding.progressBar.isVisible = true
+            val response = try {
+                RetrofitInstance.api.getLocations()
+            } catch (e: IOException) {
+                Log.d("TAG", "IOException, you might not have internet connection")
+                binding.progressBar.isVisible = false
+                binding.tvError.isVisible = true
+                binding.tvError.text = "IOException, you might not have internet connection"
+                return@launchWhenCreated
+            } catch (e: HttpException) {
+                Log.d("TAG", "HttpException, unexpected response")
+                binding.progressBar.isVisible = false
+                binding.tvError.isVisible = true
+                binding.tvError.text = "HttpException, unexpected response"
+                return@launchWhenCreated
+            }
+            if (response.isSuccessful && response.body() != null) {
+                locationAdapter.locations = response.body()!!.results
+            }else{
+                Log.d("TAG", "Response not successful")
+            }
+            binding.progressBar.isVisible = false
+            binding.tvError.isVisible = false
+        }
+        return binding.root
     }
 
     override fun getTitleRes(): Int = R.string.locations
 
+    private fun setupRecyclerView() = binding.list.apply {
+        locationAdapter = LocationAdapter()
+        adapter = locationAdapter
+        layoutManager = GridLayoutManager(context, 2) // LinearLayoutManager(context)
+    }
+
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LocationsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
+
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             LocationsFragment().apply {

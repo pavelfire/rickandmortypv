@@ -1,13 +1,15 @@
 package com.vk.directop.rickandmortypv.presentation
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vk.directop.rickandmortypv.R
-import com.vk.directop.rickandmortypv.data.remote.data_transfer_object.CharacterRM
+import com.vk.directop.rickandmortypv.data.remote.data_transfer_object.character.CharacterRM
 import com.vk.directop.rickandmortypv.databinding.CharacterItemBinding
 
 class CharacterAdapter : RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder>() {
@@ -45,17 +47,24 @@ class CharacterAdapter : RecyclerView.Adapter<CharacterAdapter.CharacterViewHold
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         holder.binding.apply {
             val characterRM = characters[position]
-            tv1.text = characterRM.name
-            tv2.text = characterRM.gender
+            tvName.text = characterRM.name
+            tvSpecies.text = characterRM.species
+            tvStatus.text = characterRM.status
+            tvGender.text = characterRM.gender
+            if (characterRM.gender == "Male"){
+                tvGender.setTextColor(Color.BLUE)
+            }else{
+                tvGender.setTextColor(Color.RED)
+            }
             if (characterRM.image.isNotBlank()) {
-                Glide.with(img1.context)
+                Glide.with(image.context)
                     .load(characterRM.image)
                     .circleCrop()
                     .placeholder(R.drawable.ic_characters)
                     .error(R.drawable.ic_error_load)
-                    .into(img1)
+                    .into(image)
             } else {
-                img1.setImageResource(R.drawable.ic_characters)
+                image.setImageResource(R.drawable.ic_characters)
             }
         }
     }
