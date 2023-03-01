@@ -102,11 +102,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun moveToNext() {
+        supportFragmentManager.popBackStack(
+            null,
+            FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
         //Log.d("TAG", "moveNext before $currentFragment")
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, CharactersFragment.newInstance("", ""))
             .commit()
         //Log.d("TAG", "moveNext after $currentFragment")
+        binding.bottomNavigationView.selectedItemId = R.id.characters
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
