@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
 import com.vk.directop.rickandmortypv.databinding.ActivityMainBinding
@@ -83,22 +84,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState == null) {
-            //Log.d("TAG", "get SaveInstanceState $currentFragment")
             binding.bottomNavigationView.visibility = View.GONE
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, SplashFragment())
                 .commit()
-            //Log.d("TAG", "get SaveInstanceState $currentFragment")
         }
 
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
     }
 
     private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager // обращаемся к fm
-            .beginTransaction() //начать транзакцию
-            .replace(R.id.fragment_container, fragment) // действие
-            .commit() // закончить транзакцию
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
     }
 
     fun moveToNext() {
@@ -106,11 +105,9 @@ class MainActivity : AppCompatActivity() {
             null,
             FragmentManager.POP_BACK_STACK_INCLUSIVE
         )
-        //Log.d("TAG", "moveNext before $currentFragment")
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, CharactersFragment.newInstance("", ""))
             .commit()
-        //Log.d("TAG", "moveNext after $currentFragment")
         binding.bottomNavigationView.selectedItemId = R.id.characters
     }
 
@@ -158,11 +155,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (fragment.toString().take(6) == "Splash") {
-            findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-                .visibility = View.GONE
+            binding.bottomNavigationView.visibility = View.GONE
+            binding.toolbar.visibility = View.GONE
         } else {
-            findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-                .visibility = View.VISIBLE
+            binding.bottomNavigationView.visibility = View.VISIBLE
         }
     }
 }
