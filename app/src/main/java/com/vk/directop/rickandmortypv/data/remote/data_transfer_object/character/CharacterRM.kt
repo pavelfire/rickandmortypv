@@ -1,5 +1,10 @@
 package com.vk.directop.rickandmortypv.data.remote.data_transfer_object.character
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
+
+@Parcelize
 data class CharacterRM(
     val created: String,
     val episode: List<String>,
@@ -13,4 +18,4 @@ data class CharacterRM(
     val status: String,
     val type: String,
     val url: String
-)
+): Parcelable

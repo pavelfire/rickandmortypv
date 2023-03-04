@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
 import com.vk.directop.rickandmortypv.data.RetrofitInstance
+import com.vk.directop.rickandmortypv.data.remote.data_transfer_object.character.CharacterRM
 import com.vk.directop.rickandmortypv.databinding.FragmentCharactersBinding
 import retrofit2.HttpException
 import java.io.IOException
@@ -19,7 +20,7 @@ import java.io.IOException
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class CharactersFragment : Fragment(), HasCustomTitle {
+class CharactersFragment : Fragment(), HasCustomTitle{
 
     private lateinit var binding: FragmentCharactersBinding
     private lateinit var characterAdapter: CharacterAdapter
@@ -41,6 +42,11 @@ class CharactersFragment : Fragment(), HasCustomTitle {
     ): View? {
 
         binding = FragmentCharactersBinding.inflate(inflater)
+
+//        navigator().listenResult(Options::class.java)
+//        binding.searchView.setOnClickListener {
+//
+//        }
 
         setupRecyclerView()
 
@@ -75,7 +81,22 @@ class CharactersFragment : Fragment(), HasCustomTitle {
     override fun getTitleRes(): Int = R.string.characters
 
     private fun setupRecyclerView() = binding.list.apply {
-        characterAdapter = CharacterAdapter()
+        characterAdapter = CharacterAdapter(
+            object: CharacterAdapter.OnCharacterListener{
+                override fun onCharacterClick(character: CharacterRM) {
+                    Log.d("TAG", "Clicked ${character.name}")
+                    requireActivity().supportFragmentManager.beginTransaction()
+                        .replace(
+                            R.id.fragment_container, CharacterDetailFragment.newInstance(
+                                character
+                            )
+                        )
+                        .addToBackStack(null)
+                        .commit()
+                }
+
+            }
+        )
         adapter = characterAdapter
         layoutManager = GridLayoutManager(context, 2) // LinearLayoutManager(context)
     }
@@ -91,4 +112,5 @@ class CharactersFragment : Fragment(), HasCustomTitle {
                 }
             }
     }
+
 }

@@ -1,9 +1,10 @@
 package com.vk.directop.rickandmortypv.presentation
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +13,9 @@ import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.data.remote.data_transfer_object.character.CharacterRM
 import com.vk.directop.rickandmortypv.databinding.CharacterItemBinding
 
-class CharacterAdapter : RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder>() {
+class CharacterAdapter(
+    private val actionListener: OnCharacterListener
+) : RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder>(), View.OnClickListener {
 
     inner class CharacterViewHolder(val binding: CharacterItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -66,9 +69,22 @@ class CharacterAdapter : RecyclerView.Adapter<CharacterAdapter.CharacterViewHold
             } else {
                 image.setImageResource(R.drawable.ic_characters)
             }
+            cardView.setOnClickListener {
+                actionListener.onCharacterClick(characterRM)
+            }
         }
     }
 
     override fun getItemCount(): Int = characters.size
+
+    override fun onClick(view: View) {
+        val characterRM = view.tag as CharacterRM
+        Log.d("TAG", "Clicked onClick in adapter ${characterRM.name}")
+        actionListener.onCharacterClick(characterRM)
+    }
+
+    interface OnCharacterListener {
+        fun onCharacterClick(character: CharacterRM)
+    }
 
 }
