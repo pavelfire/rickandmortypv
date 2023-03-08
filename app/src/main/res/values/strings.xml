@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Rick and Morty PV</string>
+    <string name="characters">Персонажи</string>
+    <string name="locations">Локации</string>
+    <string name="episodes">Эпизоды</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
