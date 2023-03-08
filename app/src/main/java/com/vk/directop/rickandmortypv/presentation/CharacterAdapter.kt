@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vk.directop.rickandmortypv.R
-import com.vk.directop.rickandmortypv.data.remote.data_transfer_object.character.CharacterRM
+import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
 import com.vk.directop.rickandmortypv.databinding.CharacterItemBinding
 
 class CharacterAdapter(
@@ -20,18 +20,18 @@ class CharacterAdapter(
     inner class CharacterViewHolder(val binding: CharacterItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    private val diffCallback = object : DiffUtil.ItemCallback<CharacterRM>() {
-        override fun areItemsTheSame(oldItem: CharacterRM, newItem: CharacterRM): Boolean {
+    private val diffCallback = object : DiffUtil.ItemCallback<CharacterDTO>() {
+        override fun areItemsTheSame(oldItem: CharacterDTO, newItem: CharacterDTO): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: CharacterRM, newItem: CharacterRM): Boolean {
+        override fun areContentsTheSame(oldItem: CharacterDTO, newItem: CharacterDTO): Boolean {
             return oldItem == newItem
         }
     }
 
     private val differ = AsyncListDiffer(this, diffCallback)
-    var characters: List<CharacterRM>
+    var characters: List<CharacterDTO>
         get() = differ.currentList
         set(value) {
             differ.submitList(value)
@@ -78,13 +78,13 @@ class CharacterAdapter(
     override fun getItemCount(): Int = characters.size
 
     override fun onClick(view: View) {
-        val characterRM = view.tag as CharacterRM
-        Log.d("TAG", "Clicked onClick in adapter ${characterRM.name}")
-        actionListener.onCharacterClick(characterRM)
+        val characterDTO = view.tag as CharacterDTO
+        Log.d("TAG", "Clicked onClick in adapter ${characterDTO.name}")
+        actionListener.onCharacterClick(characterDTO)
     }
 
     interface OnCharacterListener {
-        fun onCharacterClick(character: CharacterRM)
+        fun onCharacterClick(character: CharacterDTO)
     }
 
 }

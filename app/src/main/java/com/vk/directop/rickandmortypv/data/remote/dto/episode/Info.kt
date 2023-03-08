@@ -1,4 +1,4 @@
-package com.vk.directop.rickandmortypv.data.remote.data_transfer_object.location
+package com.vk.directop.rickandmortypv.data.remote.dto.episode
 
 data class Info(
     val count: Int,

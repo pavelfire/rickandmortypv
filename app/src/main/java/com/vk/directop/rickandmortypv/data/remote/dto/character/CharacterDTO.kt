@@ -1,11 +1,10 @@
-package com.vk.directop.rickandmortypv.data.remote.data_transfer_object.character
+package com.vk.directop.rickandmortypv.data.remote.dto.character
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
 
 @Parcelize
-data class CharacterRM(
+data class CharacterDTO(
     val created: String,
     val episode: List<String>,
     val gender: String,

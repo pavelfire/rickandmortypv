@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import com.vk.directop.rickandmortypv.MainActivity
 import com.vk.directop.rickandmortypv.R
 
+private const val DELAY = 1500L
+
 class SplashFragment : Fragment() {
 
     private val handler = Handler(Looper.getMainLooper())
@@ -28,12 +30,5 @@ class SplashFragment : Fragment() {
                 (activity as MainActivity).moveToNext()
             }, DELAY)
         }.start()
-
-
-    }
-
-    companion object {
-        @JvmStatic
-        private val DELAY = 1500L // milliseconds
     }
 }

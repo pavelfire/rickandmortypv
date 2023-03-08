@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.vk.directop.rickandmortypv.R
-import com.vk.directop.rickandmortypv.data.remote.data_transfer_object.character.CharacterRM
+import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
 import com.vk.directop.rickandmortypv.databinding.FragmentCharacterDetailBinding
 
 private const val ARG_CHARACTER = "ARG_CHARACTER"
@@ -16,12 +16,12 @@ class CharacterDetailFragment : Fragment() {
 
     lateinit var binding: FragmentCharacterDetailBinding
 
-    private var characterRM: CharacterRM? = null
+    private var characterDTO: CharacterDTO? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            characterRM = it.getParcelable(ARG_CHARACTER)
+            characterDTO = it.getParcelable(ARG_CHARACTER)
         }
     }
 
@@ -33,15 +33,15 @@ class CharacterDetailFragment : Fragment() {
         binding = FragmentCharacterDetailBinding.inflate(inflater)
 
         with(binding) {
-            tvName.text = characterRM!!.name
-            tvGender.text = characterRM!!.gender
-            tvStatus.text = characterRM!!.status
-            tvSpecies.text = characterRM!!.species
-            tvEpisode.text = characterRM!!.episode.toString()
+            tvName.text = characterDTO!!.name
+            tvGender.text = characterDTO!!.gender
+            tvStatus.text = characterDTO!!.status
+            tvSpecies.text = characterDTO!!.species
+            tvEpisode.text = characterDTO!!.episode.toString()
 
-            if (characterRM!!.image.isNotBlank()) {
+            if (characterDTO!!.image.isNotBlank()) {
                 Glide.with(image.context)
-                    .load(characterRM!!.image)
+                    .load(characterDTO!!.image)
                     .circleCrop()
                     .placeholder(R.drawable.ic_characters)
                     .error(R.drawable.ic_error_load)
@@ -57,10 +57,10 @@ class CharacterDetailFragment : Fragment() {
     companion object {
 
         @JvmStatic
-        fun newInstance(characterRM: CharacterRM) =
+        fun newInstance(characterDTO: CharacterDTO) =
             CharacterDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(ARG_CHARACTER, characterRM)
+                    putParcelable(ARG_CHARACTER, characterDTO)
                 }
             }
     }

@@ -1,8 +1,8 @@
 package com.vk.directop.rickandmortypv.data.remote
 
-import com.vk.directop.rickandmortypv.data.remote.data_transfer_object.character.CharacterResponse
-import com.vk.directop.rickandmortypv.data.remote.data_transfer_object.episode.EpisodeResponse
-import com.vk.directop.rickandmortypv.data.remote.data_transfer_object.location.LocationResponse
+import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterResponse
+import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeResponse
+import com.vk.directop.rickandmortypv.data.remote.dto.location.LocationResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

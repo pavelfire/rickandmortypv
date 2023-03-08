@@ -1,10 +1,10 @@
-package com.vk.directop.rickandmortypv.data.remote.data_transfer_object.character
+package com.vk.directop.rickandmortypv.data.remote.dto.character
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Location(
+data class Origin(
     val name: String,
     val url: String
-) : Parcelable
+): Parcelable

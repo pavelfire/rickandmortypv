@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
 import com.vk.directop.rickandmortypv.data.RetrofitInstance
-import com.vk.directop.rickandmortypv.data.remote.data_transfer_object.character.CharacterRM
+import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
 import com.vk.directop.rickandmortypv.databinding.FragmentCharactersBinding
 import retrofit2.HttpException
 import java.io.IOException
@@ -83,7 +83,7 @@ class CharactersFragment : Fragment(), HasCustomTitle{
     private fun setupRecyclerView() = binding.list.apply {
         characterAdapter = CharacterAdapter(
             object: CharacterAdapter.OnCharacterListener{
-                override fun onCharacterClick(character: CharacterRM) {
+                override fun onCharacterClick(character: CharacterDTO) {
                     Log.d("TAG", "Clicked ${character.name}")
                     requireActivity().supportFragmentManager.beginTransaction()
                         .replace(

@@ -1,6 +1,6 @@
-package com.vk.directop.rickandmortypv.data.remote.data_transfer_object.location
+package com.vk.directop.rickandmortypv.data.remote.dto.location
 
-data class LocationRM(
+data class LocationDTO(
     val created: String,
     val dimension: String,
     val id: Int,

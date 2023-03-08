@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.vk.directop.rickandmortypv.data.remote.data_transfer_object.episode.EpisodeRM
+import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDTO
 import com.vk.directop.rickandmortypv.databinding.EpisodeItemBinding
 
 class EpisodeAdapter : RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>() {
@@ -13,18 +13,18 @@ class EpisodeAdapter : RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>() 
     inner class EpisodeViewHolder(val binding: EpisodeItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    private val diffCallback = object : DiffUtil.ItemCallback<EpisodeRM>() {
-        override fun areItemsTheSame(oldItem: EpisodeRM, newItem: EpisodeRM): Boolean {
+    private val diffCallback = object : DiffUtil.ItemCallback<EpisodeDTO>() {
+        override fun areItemsTheSame(oldItem: EpisodeDTO, newItem: EpisodeDTO): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: EpisodeRM, newItem: EpisodeRM): Boolean {
+        override fun areContentsTheSame(oldItem: EpisodeDTO, newItem: EpisodeDTO): Boolean {
             return oldItem == newItem
         }
     }
 
     private val differ = AsyncListDiffer(this, diffCallback)
-    var episodes: List<EpisodeRM>
+    var episodes: List<EpisodeDTO>
         get() = differ.currentList
         set(value) {
             differ.submitList(value)
