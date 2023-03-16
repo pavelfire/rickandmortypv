@@ -1,16 +1,15 @@
 package com.vk.directop.rickandmortypv.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.vk.directop.rickandmortypv.data.mappers.CharacterApiResponseMapper
 import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
 import com.vk.directop.rickandmortypv.domain.common.Resultss
 import com.vk.directop.rickandmortypv.domain.usecases.GetCharactersUseCase
 import kotlinx.coroutines.launch
 
 class CharactersViewModel(
-    private val getCharactersUseCase: GetCharactersUseCase
+    private val getCharactersUseCase: GetCharactersUseCase,
+    private val mapper: CharacterApiResponseMapper
 ) : ViewModel() {
 
     private val _dataLoading = MutableLiveData(true)
@@ -40,6 +39,19 @@ class CharactersViewModel(
                     _error.postValue(charactersResult.exception.message)
                 }
             }
+        }
+    }
+
+    class CharactersViewModelFactory(
+        private val getCharactersUseCase: GetCharactersUseCase,
+        private val mapper: CharacterApiResponseMapper
+    ) : ViewModelProvider.NewInstanceFactory() {
+
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return CharactersViewModel(
+                getCharactersUseCase,
+                mapper
+            ) as T
         }
     }
 }
