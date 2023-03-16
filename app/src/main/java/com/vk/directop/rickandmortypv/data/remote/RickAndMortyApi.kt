@@ -12,14 +12,32 @@ interface RickAndMortyApi {
     @GET("/api/character")
     suspend fun getCharacters(
         @Query("page")
-        pageNumber: Int = 1
+        pageNumber: Int = 1,
+        @Query("name")
+        name: String = "",
+        @Query("gender")
+        gender: String = "",
+        @Query("status")
+        status: String = "",
     ): Response<CharacterResponse>
 
     @GET("/api/episode")
-    suspend fun getEpisodes(): Response<EpisodeResponse>
+    suspend fun getEpisodes(
+        @Query("name")
+        name: String = "",
+        @Query("episode")
+        episode: String = "",
+    ): Response<EpisodeResponse>
 
     @GET("/api/location")
-    suspend fun getLocations(): Response<LocationResponse>
+    suspend fun getLocations(
+        @Query("name")
+        name: String = "",
+        @Query("type")
+        type: String = "",
+        @Query("dimension")
+        dimension: String = "",
+    ): Response<LocationResponse>
 
 
 }
