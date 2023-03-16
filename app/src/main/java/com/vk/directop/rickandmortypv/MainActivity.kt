@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity(), Navigator {
             FragmentManager.POP_BACK_STACK_INCLUSIVE
         )
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, CharactersFragment.newInstance("", ""))
+            .replace(R.id.fragment_container, CharactersFragment())
             .commit()
         binding.bottomNavigationView.selectedItemId = R.id.characters
     }

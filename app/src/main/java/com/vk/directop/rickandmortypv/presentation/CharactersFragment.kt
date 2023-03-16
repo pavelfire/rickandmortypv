@@ -10,9 +10,11 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vk.directop.rickandmortypv.R
+import com.vk.directop.rickandmortypv.app.App
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
 import com.vk.directop.rickandmortypv.data.RetrofitInstance
 import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
@@ -23,24 +25,22 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 import io.reactivex.subjects.PublishSubject
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 class CharactersFragment : Fragment(), HasCustomTitle{
 
     private lateinit var binding: FragmentCharactersBinding
     private lateinit var characterAdapter: CharacterAdapter
     private val editTextSubject = PublishSubject.create<String>()
 
-    private var param1: String? = null
-    private var param2: String? = null
+    private val charactersViewModel: CharactersViewModel by viewModels {
+        CharactersViewModel.CharactersViewModelFactory(
+            ((requireActivity().application) as App).getCharactersUseCase,
+            //((requireActivity().application) as App).getCharactersUseCase
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     @SuppressLint("CheckResult")
@@ -50,11 +50,6 @@ class CharactersFragment : Fragment(), HasCustomTitle{
     ): View? {
 
         binding = FragmentCharactersBinding.inflate(inflater)
-
-//        navigator().listenResult(Options::class.java)
-//        binding.searchView.setOnClickListener {
-//
-//        }
 
         setupRecyclerView()
 
@@ -140,7 +135,6 @@ class CharactersFragment : Fragment(), HasCustomTitle{
                         .addToBackStack(null)
                         .commit()
                 }
-
             }
         )
         adapter = characterAdapter
@@ -148,15 +142,7 @@ class CharactersFragment : Fragment(), HasCustomTitle{
     }
 
     companion object {
-
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LocationsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        const val COLUMNS_COUNT = 2
     }
 
 }
