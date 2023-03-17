@@ -83,6 +83,37 @@ class CharacterAdapter(
         actionListener.onCharacterClick(characterDTO)
     }
 
+
+    //--------------------
+    fun submitUpdate(update: List<CharacterDTO>){
+        val callback = CharactersDiffCallback(characters, update)
+        val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(callback)
+
+        //characters.clear()
+    }
+
+    class CharactersDiffCallback(
+        private val oldCharacters: List<CharacterDTO>,
+        private val newCharacters: List<CharacterDTO>
+    ) :
+        DiffUtil.Callback() {
+        override fun getOldListSize(): Int {
+            return oldCharacters.size
+        }
+
+        override fun getNewListSize(): Int {
+            return newCharacters.size
+        }
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldCharacters[oldItemPosition].id == newCharacters[newItemPosition].id
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldCharacters[oldItemPosition].status == newCharacters[newItemPosition].status
+        }
+    }
+//------------------------------------------
     interface OnCharacterListener {
         fun onCharacterClick(character: CharacterDTO)
     }

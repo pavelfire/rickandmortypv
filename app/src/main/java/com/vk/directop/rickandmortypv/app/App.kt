@@ -4,6 +4,7 @@ import android.app.Application
 import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersRepositoryImpl
 import com.vk.directop.rickandmortypv.di.ServiceLocator
 import com.vk.directop.rickandmortypv.domain.usecases.GetCharactersUseCase
+import com.vk.directop.rickandmortypv.domain.usecases.GetSavedCharactersUseCase
 
 class App: Application() {
 
@@ -12,6 +13,9 @@ class App: Application() {
 
     val getCharactersUseCase: GetCharactersUseCase
     get() = GetCharactersUseCase(charactersRepository)
+
+    val getSavedCharactersUseCase: GetSavedCharactersUseCase
+        get() = GetSavedCharactersUseCase(charactersRepository)
 
     //val character
 

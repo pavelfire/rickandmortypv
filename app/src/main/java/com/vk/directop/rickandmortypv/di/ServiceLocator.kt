@@ -34,7 +34,7 @@ object ServiceLocator {
     private fun createCharactersRepository(context: Context): CharactersRepositoryImpl {
         val newRepo =
             CharactersRepositoryImpl(
-                createCharactersLocalDataSource(context),
+                //createCharactersLocalDataSource(context),
                 CharactersRemoteDataSourceImpl(
                     networkModule.createCharactersApi(BASE_URL),
                     CharacterApiResponseMapper()
