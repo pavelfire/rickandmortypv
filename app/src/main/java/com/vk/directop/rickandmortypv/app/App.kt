@@ -2,8 +2,10 @@ package com.vk.directop.rickandmortypv.app
 
 import android.app.Application
 import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersRepositoryImpl
+import com.vk.directop.rickandmortypv.data.repositories.episodes.EpisodesRepositoryImpl
 import com.vk.directop.rickandmortypv.di.ServiceLocator
 import com.vk.directop.rickandmortypv.domain.usecases.GetCharactersUseCase
+import com.vk.directop.rickandmortypv.domain.usecases.GetEpisodesUseCase
 import com.vk.directop.rickandmortypv.domain.usecases.GetSavedCharactersUseCase
 
 class App: Application() {
@@ -17,7 +19,13 @@ class App: Application() {
     val getSavedCharactersUseCase: GetSavedCharactersUseCase
         get() = GetSavedCharactersUseCase(charactersRepository)
 
-    //val character
+    private val episodesRepository: EpisodesRepositoryImpl
+        get() = ServiceLocator.provideEpisodesRepository(this)
+
+    val getEpisodesUseCase: GetEpisodesUseCase
+    get() = GetEpisodesUseCase(episodesRepository)
+
+
 
     override fun onCreate() {
         super.onCreate()
@@ -27,8 +35,3 @@ class App: Application() {
 
 
 
-/*
-https://medium.com/android-beginners/pagination-with-recyclerview-in-android-3e099c65b6a3
-
-
- */

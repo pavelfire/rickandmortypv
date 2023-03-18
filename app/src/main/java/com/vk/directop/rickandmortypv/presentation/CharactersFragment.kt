@@ -55,11 +55,8 @@ class CharactersFragment : Fragment(), HasCustomTitle{
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentCharactersBinding.inflate(inflater)
-        //setupRecyclerView()
-        //debunceSearch(binding)
-        //initialLoad(binding)
 
+        binding = FragmentCharactersBinding.inflate(inflater)
         return binding.root
     }
 

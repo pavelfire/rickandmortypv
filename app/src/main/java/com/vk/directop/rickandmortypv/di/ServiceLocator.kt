@@ -9,6 +9,8 @@ import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersLoc
 import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersLocalDataSourceImpl
 import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersRemoteDataSourceImpl
 import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersRepositoryImpl
+import com.vk.directop.rickandmortypv.data.repositories.episodes.EpisodesRemoteDataSourceImpl
+import com.vk.directop.rickandmortypv.data.repositories.episodes.EpisodesRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 
 const val BASE_URL = "https://rickandmortyapi.com"
@@ -57,5 +59,26 @@ object ServiceLocator {
         val result = CharactersDatabase.getDatabase(context)
         database = result
         return result
+    }
+
+    @Volatile
+    var episodesRepository: EpisodesRepositoryImpl? = null
+
+    fun provideEpisodesRepository(context: Context): EpisodesRepositoryImpl{
+        synchronized(this){
+            return episodesRepository ?: createEpisodesRepository(context)
+        }
+    }
+
+    private fun createEpisodesRepository(context: Context): EpisodesRepositoryImpl {
+        val newRepo =
+            EpisodesRepositoryImpl(
+                EpisodesRemoteDataSourceImpl(
+                    networkModule.createCharactersApi(BASE_URL),
+                    ApiResponseMapper()
+                )
+            )
+        episodesRepository = newRepo
+        return newRepo
     }
 }

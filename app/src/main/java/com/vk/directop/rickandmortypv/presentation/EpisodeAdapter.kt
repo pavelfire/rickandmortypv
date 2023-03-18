@@ -1,6 +1,7 @@
 package com.vk.directop.rickandmortypv.presentation
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -8,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDTO
 import com.vk.directop.rickandmortypv.databinding.EpisodeItemBinding
 
-class EpisodeAdapter : RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>() {
+class EpisodeAdapter(
+    private val actionListener: OnEpisodeListener
+) : RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>(), View.OnClickListener {
 
     inner class EpisodeViewHolder(val binding: EpisodeItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -49,9 +52,22 @@ class EpisodeAdapter : RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>() 
             tvName.text = episodeRM.name
             tvEpisode.text = episodeRM.episode
             tvAirDate.text = episodeRM.air_date
+
+            cardView.setOnClickListener {
+                actionListener.onEpisodeClick(episodeRM)
+            }
         }
     }
 
     override fun getItemCount(): Int = episodes.size
+
+    interface OnEpisodeListener {
+        fun onEpisodeClick(episode: EpisodeDTO)
+    }
+
+    override fun onClick(view: View) {
+        val episodeDTO = view.tag as EpisodeDTO
+        actionListener.onEpisodeClick(episodeDTO)
+    }
 
 }
