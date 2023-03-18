@@ -10,12 +10,13 @@ import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
 import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDTO
 import com.vk.directop.rickandmortypv.databinding.FragmentCharacterDetailBinding
+import com.vk.directop.rickandmortypv.databinding.FragmentEpisodeDetailBinding
 
 private const val ARG_CHARACTER = "ARG_CHARACTER"
 
 class EpisodeDetailFragment : Fragment() {
 
-    lateinit var binding: FragmentCharacterDetailBinding
+    lateinit var binding: FragmentEpisodeDetailBinding
 
     private var episodeDTO: EpisodeDTO? = null
 
@@ -31,14 +32,14 @@ class EpisodeDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentCharacterDetailBinding.inflate(inflater)
+        binding = FragmentEpisodeDetailBinding.inflate(inflater)
 
         with(binding) {
             tvName.text = episodeDTO!!.name
-            tvGender.text = episodeDTO!!.air_date
-            tvStatus.text = episodeDTO!!.created
-            tvSpecies.text = episodeDTO!!.episode
-            tvEpisode.text = episodeDTO!!.characters.toString()
+            tvAirDate.text = episodeDTO!!.air_date
+            tvCreated.text = episodeDTO!!.created
+            tvEpisode.text = episodeDTO!!.episode
+            tvCharacters.text = episodeDTO!!.characters.toString()
         }
 
         return binding.root

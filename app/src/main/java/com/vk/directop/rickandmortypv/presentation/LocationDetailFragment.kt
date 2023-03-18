@@ -6,19 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.vk.directop.rickandmortypv.data.remote.dto.location.LocationDTO
-import com.vk.directop.rickandmortypv.databinding.FragmentCharacterDetailBinding
+import com.vk.directop.rickandmortypv.databinding.FragmentLocationDetailBinding
 
-private const val ARG_CHARACTER = "ARG_CHARACTER"
+private const val ELEMENT = "ELEMENT"
 
 class LocationDetailFragment : Fragment() {
 
-    lateinit var binding: FragmentCharacterDetailBinding
+    lateinit var binding: FragmentLocationDetailBinding
     private var locationDTO: LocationDTO? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            locationDTO = it.getParcelable(ARG_CHARACTER)
+            locationDTO = it.getParcelable(ELEMENT)
         }
     }
 
@@ -27,14 +27,14 @@ class LocationDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentCharacterDetailBinding.inflate(inflater)
+        binding = FragmentLocationDetailBinding.inflate(inflater)
 
         with(binding) {
             tvName.text = locationDTO!!.name
-            tvGender.text = locationDTO!!.dimension
-            tvStatus.text = locationDTO!!.created
-            tvSpecies.text = locationDTO!!.type
-            tvEpisode.text = locationDTO!!.residents.toString()
+            tvDimension.text = locationDTO!!.dimension
+            tvCreated.text = locationDTO!!.created
+            tvType.text = locationDTO!!.type
+            tvResidents.text = locationDTO!!.residents.toString()
         }
 
         return binding.root
@@ -46,7 +46,7 @@ class LocationDetailFragment : Fragment() {
         fun newInstance(locationDTO: LocationDTO) =
             LocationDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(ARG_CHARACTER, locationDTO)
+                    putParcelable(ELEMENT, locationDTO)
                 }
             }
     }
