@@ -3,7 +3,7 @@ package com.vk.directop.rickandmortypv.di
 import android.content.Context
 import com.vk.directop.rickandmortypv.data.api.NetworkModule
 import com.vk.directop.rickandmortypv.data.db.CharactersDatabase
-import com.vk.directop.rickandmortypv.data.mappers.CharacterApiResponseMapper
+import com.vk.directop.rickandmortypv.data.mappers.ApiResponseMapper
 import com.vk.directop.rickandmortypv.data.mappers.CharacterEntityMapper
 import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersLocalDataSource
 import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersLocalDataSourceImpl
@@ -37,7 +37,7 @@ object ServiceLocator {
                 //createCharactersLocalDataSource(context),
                 CharactersRemoteDataSourceImpl(
                     networkModule.createCharactersApi(BASE_URL),
-                    CharacterApiResponseMapper()
+                    ApiResponseMapper()
                 )
             )
         charactersRepository = newRepo

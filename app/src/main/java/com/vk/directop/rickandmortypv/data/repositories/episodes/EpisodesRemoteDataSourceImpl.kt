@@ -1,30 +1,30 @@
-package com.vk.directop.rickandmortypv.data.repositories.characters
+package com.vk.directop.rickandmortypv.data.repositories.episodes
 
 import com.vk.directop.rickandmortypv.data.mappers.ApiResponseMapper
 import com.vk.directop.rickandmortypv.data.remote.RickAndMortyApi
-import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
+import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDTO
 import com.vk.directop.rickandmortypv.domain.common.Resultss
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 
-class CharactersRemoteDataSourceImpl(
+class EpisodesRemoteDataSourceImpl(
     private val service: RickAndMortyApi,
     private val mapper: ApiResponseMapper,
-) : CharactersRemoteDataSource {
+) : EpisodesRemoteDataSource {
 
-    override suspend fun getCharacters(): Resultss<List<CharacterDTO>> =
-        withContext(Dispatchers.IO){
+    override suspend fun getEpisodes(): Resultss<List<EpisodeDTO>> =
+        withContext(Dispatchers.IO) {
             try {
-                val response = service.getCharacters()
-                if (response.isSuccessful){
-                    return@withContext Resultss.Success(mapper.toMyList(response.body()!!))
+                val response = service.getEpisodes()
+                if (response.isSuccessful) {
+                    return@withContext Resultss.Success(mapper.toEpisodesList(response.body()!!))
                 } else {
                     return@withContext Resultss.Error(Exception(response.message()))
                 }
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 return@withContext Resultss.Error(e)
             }
         }
+
 
 }

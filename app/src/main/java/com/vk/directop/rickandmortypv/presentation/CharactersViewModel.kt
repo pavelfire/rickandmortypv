@@ -1,14 +1,9 @@
 package com.vk.directop.rickandmortypv.presentation
 
 import androidx.lifecycle.*
-import com.vk.directop.rickandmortypv.data.mappers.CharacterApiResponseMapper
 import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
-import com.vk.directop.rickandmortypv.data.remote.dto.character.Location
-import com.vk.directop.rickandmortypv.data.remote.dto.character.Origin
 import com.vk.directop.rickandmortypv.domain.common.Resultss
 import com.vk.directop.rickandmortypv.domain.usecases.GetCharactersUseCase
-import com.vk.directop.rickandmortypv.domain.usecases.GetSavedCharactersUseCase
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class CharactersViewModel(
