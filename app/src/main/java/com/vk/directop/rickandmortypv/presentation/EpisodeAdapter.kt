@@ -61,13 +61,13 @@ class EpisodeAdapter(
 
     override fun getItemCount(): Int = episodes.size
 
-    interface OnEpisodeListener {
-        fun onEpisodeClick(episode: EpisodeDTO)
-    }
-
     override fun onClick(view: View) {
         val episodeDTO = view.tag as EpisodeDTO
         actionListener.onEpisodeClick(episodeDTO)
+    }
+
+    interface OnEpisodeListener {
+        fun onEpisodeClick(episode: EpisodeDTO)
     }
 
 }

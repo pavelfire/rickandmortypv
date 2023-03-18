@@ -1,6 +1,7 @@
 package com.vk.directop.rickandmortypv.presentation
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -8,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vk.directop.rickandmortypv.data.remote.dto.location.LocationDTO
 import com.vk.directop.rickandmortypv.databinding.LocationItemBinding
 
-class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
+class LocationAdapter(
+    private val actionListener: OnLocationListener
+) : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>(), View.OnClickListener {
 
     inner class LocationViewHolder(val binding: LocationItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -46,9 +49,21 @@ class LocationAdapter : RecyclerView.Adapter<LocationAdapter.LocationViewHolder>
             tvName.text = locationRM.name
             tvType.text = locationRM.type
             tvDimension.text = locationRM.dimension
+
+            cardView.setOnClickListener {
+                actionListener.onLocationClick(locationRM)
+            }
         }
     }
 
     override fun getItemCount(): Int = locations.size
 
+    override fun onClick(view: View) {
+        val locationDTO = view.tag as LocationDTO
+        actionListener.onLocationClick(locationDTO)
+    }
+
+    interface OnLocationListener {
+        fun onLocationClick(location: LocationDTO)
+    }
 }

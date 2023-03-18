@@ -34,6 +34,7 @@ class EpisodesFragment : Fragment(), HasCustomTitle {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         episodeAdapter = EpisodeAdapter(
             object : EpisodeAdapter.OnEpisodeListener{
                 override fun onEpisodeClick(episode: EpisodeDTO) {
@@ -99,34 +100,5 @@ class EpisodesFragment : Fragment(), HasCustomTitle {
 
     companion object {
         const val COLUMNS_COUNT = 2
-    }
-
-    fun delBeforeCommit() {
-
-        lifecycleScope.launchWhenCreated {
-            binding.progressBar.isVisible = true
-            val response = try {
-                RetrofitInstance.api.getEpisodes()
-            } catch (e: IOException) {
-                Log.d("TAG", "IOException, you might not have internet connection")
-                binding.progressBar.isVisible = false
-                binding.tvError.isVisible = true
-                binding.tvError.text = "IOException, you might not have internet connection"
-                return@launchWhenCreated
-            } catch (e: HttpException) {
-                Log.d("TAG", "HttpException, unexpected response")
-                binding.progressBar.isVisible = false
-                binding.tvError.isVisible = true
-                binding.tvError.text = "HttpException, unexpected response"
-                return@launchWhenCreated
-            }
-            if (response.isSuccessful && response.body() != null) {
-                episodeAdapter.episodes = response.body()!!.results
-            } else {
-                Log.d("TAG", "Response not successful")
-            }
-            binding.progressBar.isVisible = false
-            binding.tvError.isVisible = false
-        }
     }
 }

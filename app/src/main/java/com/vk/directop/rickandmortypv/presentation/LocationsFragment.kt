@@ -1,25 +1,48 @@
 package com.vk.directop.rickandmortypv.presentation
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vk.directop.rickandmortypv.R
+import com.vk.directop.rickandmortypv.app.App
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
-import com.vk.directop.rickandmortypv.data.RetrofitInstance
+import com.vk.directop.rickandmortypv.data.remote.dto.location.LocationDTO
 import com.vk.directop.rickandmortypv.databinding.FragmentLocationsBinding
-import retrofit2.HttpException
-import java.io.IOException
 
 class LocationsFragment : Fragment(), HasCustomTitle {
 
     private lateinit var binding: FragmentLocationsBinding
     private lateinit var locationAdapter: LocationAdapter
+
+    private val locationsViewModel: LocationsViewModel by viewModels {
+        LocationsViewModel.LocationsViewModelFactory(
+            ((requireActivity().application) as App).getLocationsUseCase
+        )
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        locationAdapter = LocationAdapter(
+            object : LocationAdapter.OnLocationListener {
+                override fun onLocationClick(location: LocationDTO) {
+                    requireActivity().supportFragmentManager.beginTransaction()
+                        .replace(
+                            R.id.fragment_container, LocationDetailFragment.newInstance(location)
+                        )
+                        .addToBackStack(null)
+                        .commit()
+                }
+            }
+        )
+
+        locationsViewModel.getLocations()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,43 +50,46 @@ class LocationsFragment : Fragment(), HasCustomTitle {
     ): View? {
 
         binding = FragmentLocationsBinding.inflate(inflater)
-
-        setupRecyclerView()
-
-        lifecycleScope.launchWhenCreated {
-            binding.progressBar.isVisible = true
-            val response = try {
-                RetrofitInstance.api.getLocations()
-            } catch (e: IOException) {
-                Log.d("TAG", "IOException, you might not have internet connection")
-                binding.progressBar.isVisible = false
-                binding.tvError.isVisible = true
-                binding.tvError.text = "IOException, you might not have internet connection"
-                return@launchWhenCreated
-            } catch (e: HttpException) {
-                Log.d("TAG", "HttpException, unexpected response")
-                binding.progressBar.isVisible = false
-                binding.tvError.isVisible = true
-                binding.tvError.text = "HttpException, unexpected response"
-                return@launchWhenCreated
-            }
-            if (response.isSuccessful && response.body() != null) {
-                locationAdapter.locations = response.body()!!.results
-            }else{
-                Log.d("TAG", "Response not successful")
-            }
-            binding.progressBar.isVisible = false
-            binding.tvError.isVisible = false
-        }
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        locationsViewModel.locations.observe(viewLifecycleOwner) {
+            locationAdapter.locations = it
+        }
+
+        locationsViewModel.dataLoading.observe(viewLifecycleOwner) { loading ->
+            when (loading) {
+                true -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.list.visibility = View.INVISIBLE
+                }
+                false -> {
+                    binding.progressBar.visibility = View.INVISIBLE
+                    binding.list.visibility = View.VISIBLE
+                }
+            }
+        }
+
+        binding.list.apply {
+            adapter = locationAdapter
+            layoutManager = GridLayoutManager(context, COLUMNS_COUNT)
+        }
+
+        locationsViewModel.error.observe(viewLifecycleOwner) {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.an_error_has_occurred, it),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     override fun getTitleRes(): Int = R.string.locations
 
-    private fun setupRecyclerView() = binding.list.apply {
-        locationAdapter = LocationAdapter()
-        adapter = locationAdapter
-        layoutManager = GridLayoutManager(context, 2) // LinearLayoutManager(context)
+    companion object {
+        const val COLUMNS_COUNT = 2
     }
-
 }
