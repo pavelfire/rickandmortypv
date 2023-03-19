@@ -1,12 +1,13 @@
 package com.vk.directop.rickandmortypv.presentation
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.*
-import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDTO
 import com.vk.directop.rickandmortypv.data.remote.dto.location.LocationDTO
 import com.vk.directop.rickandmortypv.domain.common.Resultss
-import com.vk.directop.rickandmortypv.domain.usecases.GetEpisodesUseCase
 import com.vk.directop.rickandmortypv.domain.usecases.GetLocationsUseCase
+import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class LocationsViewModel(
     private val getLocationsUseCase: GetLocationsUseCase
@@ -23,10 +24,31 @@ class LocationsViewModel(
 
     private val _remoteEpisodes = arrayListOf<LocationDTO>()
 
-    fun getLocations() {
+    private val _searchFilter = MutableLiveData<String>("")
+    val searchFilter: LiveData<String> = _searchFilter
+
+    private val editTextSubject = PublishSubject.create<String>()
+
+    @SuppressLint("CheckResult")
+    fun searchName(text: String, sendButton: Boolean) {
+
+        _searchFilter.value = text
+
+        if (sendButton) getLocations(_searchFilter.value.toString())
+        else {
+            editTextSubject.onNext(text)
+            editTextSubject
+                .debounce(2000, TimeUnit.MILLISECONDS)
+                .subscribe {
+                    getLocations(_searchFilter.value.toString())
+                }
+        }
+    }
+
+    fun getLocations(name: String) {
         viewModelScope.launch {
             _dataLoading.postValue(true)
-            when (val locationsResult = getLocationsUseCase.invoke()) {
+            when (val locationsResult = getLocationsUseCase.invoke(name)) {
                 is Resultss.Success -> {
                     _remoteEpisodes.clear()
                     _remoteEpisodes.addAll(locationsResult.data)

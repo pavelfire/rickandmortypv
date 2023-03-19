@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter
 import android.view.View
 import androidx.core.view.isVisible
 
-
 class LayoutUtils {
     companion object {
         fun crossFade(viewToShow: View, viewToHide: View, duration: Int = 500) {

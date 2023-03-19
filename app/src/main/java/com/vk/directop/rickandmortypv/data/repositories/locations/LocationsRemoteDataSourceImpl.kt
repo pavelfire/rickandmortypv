@@ -2,7 +2,6 @@ package com.vk.directop.rickandmortypv.data.repositories.locations
 
 import com.vk.directop.rickandmortypv.data.mappers.ApiResponseMapper
 import com.vk.directop.rickandmortypv.data.remote.RickAndMortyApi
-import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDTO
 import com.vk.directop.rickandmortypv.data.remote.dto.location.LocationDTO
 import com.vk.directop.rickandmortypv.domain.common.Resultss
 import kotlinx.coroutines.Dispatchers
@@ -13,10 +12,10 @@ class LocationsRemoteDataSourceImpl(
     private val mapper: ApiResponseMapper,
 ) : LocationsRemoteDataSource {
 
-    override suspend fun getLocations(): Resultss<List<LocationDTO>> =
+    override suspend fun getLocations(name: String): Resultss<List<LocationDTO>> =
         withContext(Dispatchers.IO) {
             try {
-                val response = service.getLocations()
+                val response = service.getLocations(name = name)
                 if (response.isSuccessful) {
                     return@withContext Resultss.Success(mapper.toLocationsList(response.body()!!))
                 } else {
@@ -26,6 +25,4 @@ class LocationsRemoteDataSourceImpl(
                 return@withContext Resultss.Error(e)
             }
         }
-
-
 }

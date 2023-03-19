@@ -5,5 +5,5 @@ import com.vk.directop.rickandmortypv.domain.common.Resultss
 
 interface LocationsRemoteDataSource {
 
-    suspend fun getLocations(): Resultss<List<LocationDTO>>
+    suspend fun getLocations(name: String): Resultss<List<LocationDTO>>
 }

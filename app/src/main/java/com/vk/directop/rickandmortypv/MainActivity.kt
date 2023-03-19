@@ -173,19 +173,19 @@ class MainActivity : AppCompatActivity(), Navigator {
     }
 
     override fun showCharactersScreen() {
-        TODO("Not yet implemented")
+
     }
 
     override fun showCharactersScreenDetail(character: CharacterItem) {
-        TODO("Not yet implemented")
+
     }
 
     override fun showLocationsScreen() {
-        TODO("Not yet implemented")
+
     }
 
     override fun showEpisodesScreen() {
-        TODO("Not yet implemented")
+
     }
 
     override fun goBack() {

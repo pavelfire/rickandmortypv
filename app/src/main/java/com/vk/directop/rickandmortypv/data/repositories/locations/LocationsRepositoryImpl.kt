@@ -8,7 +8,7 @@ class LocationsRepositoryImpl (
     private val remoteDataSource: LocationsRemoteDataSource,
         ): LocationsRepository {
 
-    override suspend fun getRemoteLocations(): Resultss<List<LocationDTO>> {
-        return remoteDataSource.getLocations()
+    override suspend fun getRemoteLocations(name: String): Resultss<List<LocationDTO>> {
+        return remoteDataSource.getLocations(name)
     }
 }

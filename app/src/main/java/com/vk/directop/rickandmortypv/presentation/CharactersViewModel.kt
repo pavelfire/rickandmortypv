@@ -1,10 +1,13 @@
 package com.vk.directop.rickandmortypv.presentation
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.*
 import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
 import com.vk.directop.rickandmortypv.domain.common.Resultss
 import com.vk.directop.rickandmortypv.domain.usecases.GetCharactersUseCase
+import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class CharactersViewModel(
     private val getCharactersUseCase: GetCharactersUseCase,
@@ -23,10 +26,31 @@ class CharactersViewModel(
 
     private val _remoteCharacters = arrayListOf<CharacterDTO>()
 
-    fun getCharacters() {
+    private val _searchFilter = MutableLiveData<String>("")
+    val searchFilter: LiveData<String> = _searchFilter
+
+    private val editTextSubject = PublishSubject.create<String>()
+
+    @SuppressLint("CheckResult")
+    fun searchName(text: String, sendButton: Boolean) {
+
+        _searchFilter.value = text
+
+        if (sendButton) getCharacters(_searchFilter.value.toString())
+        else {
+            editTextSubject.onNext(text)
+            editTextSubject
+                .debounce(2000, TimeUnit.MILLISECONDS)
+                .subscribe {
+                    getCharacters(_searchFilter.value.toString())
+                }
+        }
+    }
+
+    fun getCharacters(name: String) {
         viewModelScope.launch {
             _dataLoading.postValue(true)
-            when (val charactersResult = getCharactersUseCase.invoke()) {
+            when (val charactersResult = getCharactersUseCase.invoke(name)) {
                 is Resultss.Success -> {
                     _remoteCharacters.clear()
                     _remoteCharacters.addAll(charactersResult.data)

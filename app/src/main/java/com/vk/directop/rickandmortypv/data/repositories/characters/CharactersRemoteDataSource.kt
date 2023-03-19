@@ -5,5 +5,5 @@ import com.vk.directop.rickandmortypv.domain.common.Resultss
 
 interface CharactersRemoteDataSource {
 
-    suspend fun getCharacters(): Resultss<List<CharacterDTO>>
+    suspend fun getCharacters(name: String): Resultss<List<CharacterDTO>>
 }
