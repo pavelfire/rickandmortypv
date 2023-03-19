@@ -22,7 +22,8 @@ class LocationsFragment : Fragment(), HasCustomTitle {
 
     private val locationsViewModel: LocationsViewModel by viewModels {
         LocationsViewModel.LocationsViewModelFactory(
-            ((requireActivity().application) as App).getLocationsUseCase
+            ((requireActivity().application) as App).getLocationsUseCase,
+            ((requireActivity().application) as App).getLocationsRxUseCase
         )
     }
 

@@ -3,6 +3,7 @@ package com.vk.directop.rickandmortypv.data.remote
 import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterResponse
 import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeResponse
 import com.vk.directop.rickandmortypv.data.remote.dto.location.LocationResponse
+import io.reactivex.Single
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -38,6 +39,16 @@ interface RickAndMortyApi {
         @Query("dimension")
         dimension: String = "",
     ): Response<LocationResponse>
+
+    @GET("/api/location")
+    fun getLocationsRx(
+        @Query("name")
+        name: String = "",
+        @Query("type")
+        type: String = "",
+        @Query("dimension")
+        dimension: String = "",
+    ): Single<Response<LocationResponse>>
 
 
 }

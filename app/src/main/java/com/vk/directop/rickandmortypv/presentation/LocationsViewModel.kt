@@ -4,13 +4,18 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.*
 import com.vk.directop.rickandmortypv.data.remote.dto.location.LocationDTO
 import com.vk.directop.rickandmortypv.domain.common.Resultss
+import com.vk.directop.rickandmortypv.domain.usecases.GetLocationsRxUseCase
 import com.vk.directop.rickandmortypv.domain.usecases.GetLocationsUseCase
+import io.reactivex.SingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class LocationsViewModel(
-    private val getLocationsUseCase: GetLocationsUseCase
+    private val getLocationsUseCase: GetLocationsUseCase,
+    private val getLocationsRxUseCase: GetLocationsRxUseCase
 ) : ViewModel() {
 
     private val _dataLoading = MutableLiveData(true)
@@ -66,14 +71,37 @@ class LocationsViewModel(
         }
     }
 
+    fun getLocationsRx(name: String) {
+
+        val observer = object : SingleObserver<List<LocationDTO>> {
+            override fun onSuccess(response: List<LocationDTO>) {
+                _locations.value = response
+            }
+
+            override fun onError(e: Throwable) {
+                _error.value = e.message
+            }
+
+            override fun onSubscribe(d: Disposable) {}
+        }
+
+        getLocationsRxUseCase.invoke(name)
+            .map { resp ->
+                resp.body()
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()//observer)
+    }
 
     class LocationsViewModelFactory(
-        private val getLocationsUseCase: GetLocationsUseCase
+        private val getLocationsUseCase: GetLocationsUseCase,
+        private val getLocationsRxUseCase: GetLocationsRxUseCase
     ) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return LocationsViewModel(
-                getLocationsUseCase
+                getLocationsUseCase,
+                getLocationsRxUseCase
             ) as T
         }
     }
