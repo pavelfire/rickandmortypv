@@ -40,8 +40,7 @@ class LocationsFragment : Fragment(), HasCustomTitle {
                         .addToBackStack(null)
                         .commit()
                 }
-            }
-        )
+            })
 
         locationsViewModel.getLocations(locationsViewModel.searchFilter.value.toString())
     }

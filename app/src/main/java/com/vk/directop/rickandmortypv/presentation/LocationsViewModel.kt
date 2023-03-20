@@ -27,9 +27,9 @@ class LocationsViewModel(
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    private val _remoteEpisodes = arrayListOf<LocationDTO>()
+    private val _remoteLocations = arrayListOf<LocationDTO>()
 
-    private val _searchFilter = MutableLiveData<String>("")
+    private val _searchFilter = MutableLiveData("")
     val searchFilter: LiveData<String> = _searchFilter
 
     private val editTextSubject = PublishSubject.create<String>()
@@ -55,10 +55,10 @@ class LocationsViewModel(
             _dataLoading.postValue(true)
             when (val locationsResult = getLocationsUseCase.invoke(name)) {
                 is Resultss.Success -> {
-                    _remoteEpisodes.clear()
-                    _remoteEpisodes.addAll(locationsResult.data)
+                    _remoteLocations.clear()
+                    _remoteLocations.addAll(locationsResult.data)
 
-                    _locations.value = _remoteEpisodes
+                    _locations.value = _remoteLocations
                     _dataLoading.postValue(false)
                 }
                 is Resultss.Error -> {

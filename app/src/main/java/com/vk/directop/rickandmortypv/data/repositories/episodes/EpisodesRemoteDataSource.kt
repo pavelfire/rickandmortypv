@@ -5,5 +5,5 @@ import com.vk.directop.rickandmortypv.domain.common.Resultss
 
 interface EpisodesRemoteDataSource {
 
-    suspend fun getEpisodes(): Resultss<List<EpisodeDTO>>
+    suspend fun getEpisodes(name: String): Resultss<List<EpisodeDTO>>
 }

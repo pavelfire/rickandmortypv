@@ -1,25 +1,19 @@
 package com.vk.directop.rickandmortypv.presentation
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.isVisible
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.app.App
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
-import com.vk.directop.rickandmortypv.data.RetrofitInstance
 import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDTO
 import com.vk.directop.rickandmortypv.databinding.FragmentEpisodesBinding
-import kotlinx.android.synthetic.main.fragment_characters.*
-import retrofit2.HttpException
-import java.io.IOException
 
 class EpisodesFragment : Fragment(), HasCustomTitle {
 
@@ -36,27 +30,24 @@ class EpisodesFragment : Fragment(), HasCustomTitle {
         super.onCreate(savedInstanceState)
 
         episodeAdapter = EpisodeAdapter(
-            object : EpisodeAdapter.OnEpisodeListener{
+            object : EpisodeAdapter.OnEpisodeListener {
                 override fun onEpisodeClick(episode: EpisodeDTO) {
                     requireActivity().supportFragmentManager.beginTransaction()
                         .replace(
-                            R.id.fragment_container, EpisodeDetailFragment.newInstance(
-                                episode
-                            )
+                            R.id.fragment_container, EpisodeDetailFragment.newInstance(episode)
                         )
                         .addToBackStack(null)
                         .commit()
                 }
-            }
-        )
+            })
 
-        episodesViewModel.getEpisodes()
+        episodesViewModel.getEpisodes(episodesViewModel.searchFilter.value.toString())
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = FragmentEpisodesBinding.inflate(inflater)
         return binding.root
@@ -65,8 +56,21 @@ class EpisodesFragment : Fragment(), HasCustomTitle {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(query: String): Boolean {
+                episodesViewModel.searchName(query, false)
+                return true
+            }
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+                episodesViewModel.searchName(query, true)
+                return false
+            }
+        })
+
         episodesViewModel.episodes.observe(viewLifecycleOwner) {
-            episodeAdapter.episodes = it
+            episodeAdapter.submitUpdate(it)
         }
 
         episodesViewModel.dataLoading.observe(viewLifecycleOwner) { loading ->

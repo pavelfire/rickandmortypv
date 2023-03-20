@@ -26,7 +26,7 @@ class CharactersViewModel(
 
     private val _remoteCharacters = arrayListOf<CharacterDTO>()
 
-    private val _searchFilter = MutableLiveData<String>("")
+    private val _searchFilter = MutableLiveData("")
     val searchFilter: LiveData<String> = _searchFilter
 
     private val editTextSubject = PublishSubject.create<String>()

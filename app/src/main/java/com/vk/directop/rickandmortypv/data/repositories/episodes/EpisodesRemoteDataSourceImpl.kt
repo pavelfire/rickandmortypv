@@ -12,10 +12,10 @@ class EpisodesRemoteDataSourceImpl(
     private val mapper: ApiResponseMapper,
 ) : EpisodesRemoteDataSource {
 
-    override suspend fun getEpisodes(): Resultss<List<EpisodeDTO>> =
+    override suspend fun getEpisodes(name: String): Resultss<List<EpisodeDTO>> =
         withContext(Dispatchers.IO) {
             try {
-                val response = service.getEpisodes()
+                val response = service.getEpisodes(name = name)
                 if (response.isSuccessful) {
                     return@withContext Resultss.Success(mapper.toEpisodesList(response.body()!!))
                 } else {

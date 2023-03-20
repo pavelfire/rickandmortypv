@@ -17,23 +17,6 @@ class LocationAdapter(
 
     private val locations: ArrayList<LocationDTO> = arrayListOf()
 
-//    private val diffCallback = object : DiffUtil.ItemCallback<LocationDTO>() {
-//        override fun areItemsTheSame(oldItem: LocationDTO, newItem: LocationDTO): Boolean {
-//            return oldItem.id == newItem.id
-//        }
-//
-//        override fun areContentsTheSame(oldItem: LocationDTO, newItem: LocationDTO): Boolean {
-//            return oldItem == newItem
-//        }
-//    }
-//
-//    private val differ = AsyncListDiffer(this, diffCallback)
-//    var locations: List<LocationDTO>
-//        get() = differ.currentList
-//        set(value) {
-//            differ.submitList(value)
-//        }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationViewHolder {
         return LocationViewHolder(
             LocationItemBinding.inflate(
