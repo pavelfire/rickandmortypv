@@ -172,21 +172,13 @@ class MainActivity : AppCompatActivity(), Navigator {
         launchFragment(SplashFragment())
     }
 
-    override fun showCharactersScreen() {
+    override fun showCharactersScreen() {}
 
-    }
+    override fun showCharactersScreenDetail(character: CharacterItem) {}
 
-    override fun showCharactersScreenDetail(character: CharacterItem) {
+    override fun showLocationsScreen() {}
 
-    }
-
-    override fun showLocationsScreen() {
-
-    }
-
-    override fun showEpisodesScreen() {
-
-    }
+    override fun showEpisodesScreen() {}
 
     override fun goBack() {
         back()
