@@ -24,6 +24,8 @@ interface RickAndMortyApi {
 
     @GET("/api/episode")
     suspend fun getEpisodes(
+        @Query("page")
+        pageNumber: Int = 1,
         @Query("name")
         name: String = "",
         @Query("episode")
