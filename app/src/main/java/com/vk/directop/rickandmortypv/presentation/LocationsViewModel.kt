@@ -1,6 +1,7 @@
 package com.vk.directop.rickandmortypv.presentation
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.*
 import com.vk.directop.rickandmortypv.data.remote.dto.location.LocationDTO
 import com.vk.directop.rickandmortypv.domain.common.Resultss
@@ -12,6 +13,10 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+
+private const val VISIBLE_THRESHOLD = -20
+private const val LAST_SEARCH_QUERY: String = "last_search_query"
+private const val DEFAULT_QUERY = ""
 
 class LocationsViewModel(
     private val getLocationsUseCase: GetLocationsUseCase,
@@ -68,6 +73,16 @@ class LocationsViewModel(
                     _dataLoading.postValue(false)
                 }
             }
+        }
+    }
+
+    fun scrollMore(
+        visibleItemCount: Int,
+        lastVisibleItemPosition: Int,
+        totalItemCount: Int
+    ) {
+        if (visibleItemCount + lastVisibleItemPosition + VISIBLE_THRESHOLD >= totalItemCount){
+            Log.d("TAG","Need load ${visibleItemCount + lastVisibleItemPosition + VISIBLE_THRESHOLD}  $totalItemCount")
         }
     }
 

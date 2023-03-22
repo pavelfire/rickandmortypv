@@ -1,6 +1,7 @@
 package com.vk.directop.rickandmortypv.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.app.App
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
@@ -91,6 +94,26 @@ class LocationsFragment : Fragment(), HasCustomTitle {
             adapter = locationAdapter
             layoutManager = GridLayoutManager(context, COLUMNS_COUNT)
         }
+
+        val layoutManager = binding.list.layoutManager as LinearLayoutManager
+        binding.list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val totalItemCount = layoutManager.itemCount
+                val visibleItemCount = layoutManager.childCount
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+
+                Log.d("TAG", "on Scoll------totalItemCount: $totalItemCount")
+                Log.d("TAG", "on Scoll------visibleItemCount: $visibleItemCount")
+                Log.d("TAG", "on Scoll------lastVisibleItem: $lastVisibleItem")
+
+                locationsViewModel.scrollMore(
+                    totalItemCount,
+                    visibleItemCount,
+                    lastVisibleItem
+                )
+            }
+        })
 
         locationsViewModel.error.observe(viewLifecycleOwner) {
             Toast.makeText(
