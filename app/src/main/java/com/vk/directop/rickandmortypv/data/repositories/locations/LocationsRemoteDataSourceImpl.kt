@@ -31,7 +31,7 @@ class LocationsRemoteDataSourceImpl(
 
     override suspend fun getLocationsP(query: LocationsParams): Flow<LocatResult> {
         Log.d("TAG", "New query: $query")
-        lastRequestedPage = 0
+        lastRequestedPage = STARTING_PAGE_INDEX
         inMemoryCache.clear()
         requestAndSaveData(query)
 
