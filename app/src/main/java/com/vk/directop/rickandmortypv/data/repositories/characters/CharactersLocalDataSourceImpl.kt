@@ -13,11 +13,12 @@ class CharactersLocalDataSourceImpl(
     private val dispatcher: CoroutineDispatcher,
     private val characterEntityMapper: CharacterEntityMapper
 ) : CharactersLocalDataSource {
-    override suspend fun characterDb(character: CharacterDTO) = withContext(dispatcher) {
+
+    override suspend fun characterSaveToDb(character: CharacterDTO) = withContext(dispatcher) {
         characterDao.saveCharacter(characterEntityMapper.toCharacterEntity(character))
     }
 
-    override suspend fun characterUn(character: CharacterDTO) = withContext(dispatcher) {
+    override suspend fun characterDeleteFromDb(character: CharacterDTO) = withContext(dispatcher) {
         characterDao.deleteCharacter(characterEntityMapper.toCharacterEntity(character))
     }
 

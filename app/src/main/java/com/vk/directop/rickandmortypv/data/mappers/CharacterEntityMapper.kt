@@ -1,10 +1,7 @@
 package com.vk.directop.rickandmortypv.data.mappers
 
-import androidx.room.PrimaryKey
 import com.vk.directop.rickandmortypv.data.entities.CharacterEntity
 import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
-import com.vk.directop.rickandmortypv.data.remote.dto.character.Location
-import com.vk.directop.rickandmortypv.data.remote.dto.character.Origin
 
 class CharacterEntityMapper {
     fun toCharacterEntity(characterDTO: CharacterDTO): CharacterEntity {
