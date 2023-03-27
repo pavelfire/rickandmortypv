@@ -3,6 +3,7 @@ package com.vk.directop.rickandmortypv.di
 import android.content.Context
 import com.vk.directop.rickandmortypv.data.api.NetworkModule
 import com.vk.directop.rickandmortypv.data.db.CharactersDatabase
+import com.vk.directop.rickandmortypv.data.db.LocationsDatabase
 import com.vk.directop.rickandmortypv.data.mappers.ApiResponseMapper
 import com.vk.directop.rickandmortypv.data.mappers.CharacterEntityMapper
 import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersLocalDataSource
@@ -13,6 +14,7 @@ import com.vk.directop.rickandmortypv.data.repositories.episodes.EpisodesRemoteD
 import com.vk.directop.rickandmortypv.data.repositories.episodes.EpisodesRepositoryImpl
 import com.vk.directop.rickandmortypv.data.repositories.locations.LocationsRemoteDataSourceImpl
 import com.vk.directop.rickandmortypv.data.repositories.locations.LocationsRepositoryImpl
+import com.vk.directop.rickandmortypv.data.repositories.locations.LocationsRepositoryRM
 import kotlinx.coroutines.Dispatchers
 
 const val BASE_URL = "https://rickandmortyapi.com"
@@ -103,5 +105,40 @@ object ServiceLocator {
             )
         locationsRepository = newRepo
         return newRepo
+    }
+
+    //--------------------
+    @Volatile
+    var locationsRepositoryRM: LocationsRepositoryRM? = null
+
+    fun provideLocationsRepositoryRM(context: Context): LocationsRepositoryRM{
+        synchronized(this){
+            return locationsRepositoryRM ?: createLocationsRepositoryRM(context)
+        }
+    }
+
+    private fun createLocationsRepositoryRM(context: Context): LocationsRepositoryRM {
+        val newRepo =
+            LocationsRepositoryRM(
+
+                    networkModule.createCharactersApi(BASE_URL),
+                    createLocDatabase(context)
+
+            )
+        locationsRepositoryRM = newRepo
+        return newRepo
+    }
+
+    private var locDatabase: LocationsDatabase? = null
+
+    private fun createLocDataSource(context: Context): LocationsDatabase{
+        val myDb = locDatabase ?: createLocDatabase(context)
+        return myDb
+    }
+
+    private fun createLocDatabase(context: Context): LocationsDatabase{
+        val result = LocationsDatabase.getInstance(context)
+        locDatabase = result
+        return result
     }
 }

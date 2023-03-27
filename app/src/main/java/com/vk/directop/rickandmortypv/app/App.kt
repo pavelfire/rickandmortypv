@@ -4,6 +4,7 @@ import android.app.Application
 import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersRepositoryImpl
 import com.vk.directop.rickandmortypv.data.repositories.episodes.EpisodesRepositoryImpl
 import com.vk.directop.rickandmortypv.data.repositories.locations.LocationsRepositoryImpl
+import com.vk.directop.rickandmortypv.data.repositories.locations.LocationsRepositoryRM
 import com.vk.directop.rickandmortypv.di.ServiceLocator
 import com.vk.directop.rickandmortypv.domain.usecases.*
 
@@ -32,6 +33,14 @@ class App: Application() {
 
     val getLocationsRxUseCase: GetLocationsRxUseCase
         get() = GetLocationsRxUseCase(locationsRepository)
+
+    //----------------------
+    private val locationsRepositoryRM: LocationsRepositoryRM
+        get() = ServiceLocator.provideLocationsRepositoryRM(this)
+
+
+    val getLocationsFlowUseCase: GetLocationsFlowUseCase
+        get() = GetLocationsFlowUseCase(locationsRepositoryRM)
 
 
     override fun onCreate() {

@@ -10,6 +10,7 @@ import com.vk.directop.rickandmortypv.data.entities.mapToDTO
 import com.vk.directop.rickandmortypv.data.remote.dto.location.LocationDTO
 import com.vk.directop.rickandmortypv.data.repositories.locations.LocationsRepositoryRM
 import com.vk.directop.rickandmortypv.domain.common.Resultss
+import com.vk.directop.rickandmortypv.domain.usecases.GetLocationsFlowUseCase
 import com.vk.directop.rickandmortypv.domain.usecases.GetLocationsRxUseCase
 import com.vk.directop.rickandmortypv.domain.usecases.GetLocationsUseCase
 import io.reactivex.SingleObserver
@@ -29,7 +30,7 @@ private const val DEFAULT_QUERY = ""
 class LocationsViewModel(
     private val getLocationsUseCase: GetLocationsUseCase,
     private val getLocationsRxUseCase: GetLocationsRxUseCase,
-    private val repository: LocationsRepositoryRM
+    private val getLocationsFlowUseCase: GetLocationsFlowUseCase,
 ) : ViewModel() {
 
     private val _dataLoading = MutableLiveData(true)
@@ -85,13 +86,22 @@ class LocationsViewModel(
         }
     }
 
-    fun getLocations(queryString: String){
-        val res = repository.getSearchResultStream(queryString)
-        val el = res.map { pagingData ->
-             pagingData.map{ it.mapToDTO() }
+    fun getLocations(queryString: String) {
+
+        viewModelScope.launch {
+            val result = getLocationsFlowUseCase.invoke(queryString)
+
+            val el = result.map { pagingData ->
+                pagingData.map { it.mapToDTO() }
+            }
+
+            val tr = result.asLiveData(Dispatchers.Main)
+
+            result.collect { data ->
+                //_locations.value = data.map { it.mapToDTO() }
+                Log.d("MyTAG", "---------Res: $data")
+            }
         }
-        val tr = res.asLiveData(Dispatchers.Main)
-        //_locations.value = tr
         viewModelScope.launch {
             _dataLoading.postValue(true)
             when (val locationsResult = getLocationsUseCase.invoke(queryString)) {
@@ -114,16 +124,19 @@ class LocationsViewModel(
     }
 
     fun getLocations11(queryString: String): Flow<PagingData<LocationEntity>> =
-        repository.getSearchResultStream(queryString)
-            //.map { pagingData -> pagingData.map { UiModelLocat.LocatItem(it) } }
+        getLocationsFlowUseCase.invoke(queryString)
+    //.map { pagingData -> pagingData.map { UiModelLocat.LocatItem(it) } }
 
     fun scrollMore(
         visibleItemCount: Int,
         lastVisibleItemPosition: Int,
         totalItemCount: Int
     ) {
-        if (visibleItemCount + lastVisibleItemPosition + VISIBLE_THRESHOLD >= totalItemCount){
-            Log.d("TAG","Need load ${visibleItemCount + lastVisibleItemPosition + VISIBLE_THRESHOLD}  $totalItemCount")
+        if (visibleItemCount + lastVisibleItemPosition + VISIBLE_THRESHOLD >= totalItemCount) {
+            Log.d(
+                "TAG",
+                "Need load ${visibleItemCount + lastVisibleItemPosition + VISIBLE_THRESHOLD}  $totalItemCount"
+            )
         }
     }
 
@@ -152,14 +165,14 @@ class LocationsViewModel(
     class LocationsViewModelFactory(
         private val getLocationsUseCase: GetLocationsUseCase,
         private val getLocationsRxUseCase: GetLocationsRxUseCase,
-        private val repository: LocationsRepositoryRM
+        private val getLocationsFlowUseCase: GetLocationsFlowUseCase,
     ) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return LocationsViewModel(
                 getLocationsUseCase,
                 getLocationsRxUseCase,
-                repository
+                getLocationsFlowUseCase
             ) as T
         }
     }

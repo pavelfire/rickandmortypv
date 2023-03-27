@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-android-extensions'
+    id 'kotlin-parcelize'
     id 'kotlin-kapt'
 }
 
@@ -81,10 +81,12 @@ dependencies {
 
     //Room
     implementation "androidx.room:room-ktx:2.5.1"
+    implementation "androidx.room:room-runtime:2.5.1"
+    kapt "androidx.room:room-compiler:2.5.1"
 
     // Paging
     implementation "androidx.room:room-paging:2.5.1"
-    //implementation "androidx.paging:paging-runtime:3.2.0-alpha04"
+    implementation "androidx.paging:paging-runtime:3.2.0-alpha04"
 
     def lifecycle_version = "2.4.0"
 

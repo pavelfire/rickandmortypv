@@ -14,7 +14,6 @@ import com.vk.directop.rickandmortypv.app.App
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
 import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
 import com.vk.directop.rickandmortypv.databinding.FragmentCharactersBinding
-import kotlinx.android.synthetic.main.fragment_characters.*
 
 class CharactersFragment : Fragment(), HasCustomTitle {
 
@@ -89,7 +88,7 @@ class CharactersFragment : Fragment(), HasCustomTitle {
             }
         }
 
-        list.apply {
+        binding.list.apply {
             adapter = characterAdapter
             layoutManager = GridLayoutManager(context, COLUMNS_COUNT)
         }
