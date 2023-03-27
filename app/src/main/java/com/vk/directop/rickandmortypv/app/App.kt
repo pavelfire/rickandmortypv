@@ -5,10 +5,23 @@ import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersRep
 import com.vk.directop.rickandmortypv.data.repositories.episodes.EpisodesRepositoryImpl
 import com.vk.directop.rickandmortypv.data.repositories.locations.LocationsRepositoryImpl
 import com.vk.directop.rickandmortypv.data.repositories.locations.LocationsRepositoryRM
+import com.vk.directop.rickandmortypv.di.AppComponent
+import com.vk.directop.rickandmortypv.di.AppModule
+import com.vk.directop.rickandmortypv.di.DaggerAppComponent
 import com.vk.directop.rickandmortypv.di.ServiceLocator
 import com.vk.directop.rickandmortypv.domain.usecases.*
 
 class App: Application() {
+
+    lateinit var appComponent: AppComponent
+
+    override fun onCreate() {
+        super.onCreate()
+
+        appComponent = DaggerAppComponent.builder()
+            .appModule(AppModule(context = this))
+            .build()
+    }
 
     private val charactersRepository: CharactersRepositoryImpl
     get() = ServiceLocator.provideCharactersRepository(this)
@@ -46,10 +59,6 @@ class App: Application() {
     val getLocationsFlowUseCase: GetLocationsFlowUseCase
         get() = GetLocationsFlowUseCase(locationsRepositoryRM)
 
-
-    override fun onCreate() {
-        super.onCreate()
-    }
 }
 
 

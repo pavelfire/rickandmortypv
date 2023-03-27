@@ -24,12 +24,13 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 private const val VISIBLE_THRESHOLD = -20
 private const val LAST_SEARCH_QUERY: String = "last_search_query"
 private const val DEFAULT_QUERY = ""
 
-class LocationsViewModel(
+class LocationsViewModel @Inject constructor(
     private val getLocationsUseCase: GetLocationsUseCase,
     private val getLocationsRxUseCase: GetLocationsRxUseCase,
     private val getLocationsFlowUseCase: GetLocationsFlowUseCase,
