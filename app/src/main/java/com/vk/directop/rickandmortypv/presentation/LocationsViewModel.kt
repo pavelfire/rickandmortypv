@@ -122,24 +122,24 @@ class LocationsViewModel(
         val observer = object : SingleObserver<List<LocationDTO>> {
             override fun onSuccess(response: List<LocationDTO>) {
                 _locations.value = response
+                Log.d("Tag", "------------on success--loc on Rx--------")
+                _dataLoading.postValue(false)
             }
 
             override fun onError(e: Throwable) {
                 _error.value = e.message
+                _dataLoading.postValue(false)
             }
 
             override fun onSubscribe(d: Disposable) {}
         }
 
         getLocationsRxUseCase.invoke(name)
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { resp ->
-                _locations.value = (resp.body()?.results)
-                Log.d("Tag", "-------------------------subscribe ${resp.body()?.results}")
+            .map { response ->
+                response.body()!!.results
             }
-            .subscribe(
-
-            )//observer)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(observer)
     }
 
     class LocationsViewModelFactory(

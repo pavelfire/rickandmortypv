@@ -6,8 +6,9 @@ import com.vk.directop.rickandmortypv.domain.common.Resultss
 import com.vk.directop.rickandmortypv.domain.repositories.LocationsRepository
 import io.reactivex.Single
 import retrofit2.Response
+import javax.inject.Inject
 
-class LocationsRepositoryImpl (
+class LocationsRepositoryImpl @Inject constructor (
     private val remoteDataSource: LocationsRemoteDataSource,
         ): LocationsRepository {
 

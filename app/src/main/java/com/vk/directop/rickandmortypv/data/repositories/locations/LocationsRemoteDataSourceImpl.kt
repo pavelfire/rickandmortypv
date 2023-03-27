@@ -15,10 +15,11 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
+import javax.inject.Inject
 
 private const val STARTING_PAGE_INDEX = 1
 
-class LocationsRemoteDataSourceImpl(
+class LocationsRemoteDataSourceImpl @Inject constructor(
     private val service: RickAndMortyApi,
     private val mapper: ApiResponseMapper,
 ) : LocationsRemoteDataSource {
