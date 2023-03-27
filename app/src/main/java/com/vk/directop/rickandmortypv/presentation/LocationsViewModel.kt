@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import androidx.paging.map
 import com.vk.directop.rickandmortypv.data.entities.LocationEntity
 import com.vk.directop.rickandmortypv.data.entities.mapToDTO
@@ -19,6 +20,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -65,27 +67,6 @@ class LocationsViewModel(
         }
     }
 
-    fun getLocationsOld(name: String) {
-        viewModelScope.launch {
-            _dataLoading.postValue(true)
-            when (val locationsResult = getLocationsUseCase.invoke(name)) {
-                is Resultss.Success -> {
-                    _remoteLocations.clear()
-                    _remoteLocations.addAll(locationsResult.data)
-
-                    _locations.value = _remoteLocations
-                    _dataLoading.postValue(false)
-                }
-                is Resultss.Error -> {
-                    _dataLoading.postValue(false)
-                    _locations.value = emptyList()
-                    _error.postValue(locationsResult.exception.message)
-                    _dataLoading.postValue(false)
-                }
-            }
-        }
-    }
-
     fun getLocations(queryString: String) {
 
         viewModelScope.launch {
@@ -123,10 +104,6 @@ class LocationsViewModel(
 
     }
 
-    fun getLocations11(queryString: String): Flow<PagingData<LocationEntity>> =
-        getLocationsFlowUseCase.invoke(queryString)
-    //.map { pagingData -> pagingData.map { UiModelLocat.LocatItem(it) } }
-
     fun scrollMore(
         visibleItemCount: Int,
         lastVisibleItemPosition: Int,
@@ -155,11 +132,14 @@ class LocationsViewModel(
         }
 
         getLocationsRxUseCase.invoke(name)
-            .map { resp ->
-                resp.body()
-            }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe()//observer)
+            .map { resp ->
+                _locations.value = (resp.body()?.results)
+                Log.d("Tag", "-------------------------subscribe ${resp.body()?.results}")
+            }
+            .subscribe(
+
+            )//observer)
     }
 
     class LocationsViewModelFactory(

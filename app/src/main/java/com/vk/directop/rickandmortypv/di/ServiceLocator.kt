@@ -107,6 +107,28 @@ object ServiceLocator {
         return newRepo
     }
 
+    // ---RX----
+    @Volatile
+    var locationsRepositoryRx: LocationsRepositoryImpl? = null
+
+    fun provideLocationsRepositoryRx(context: Context): LocationsRepositoryImpl{
+        synchronized(this){
+            return locationsRepositoryRx ?: createLocationsRepositoryRx(context)
+        }
+    }
+
+    private fun createLocationsRepositoryRx(context: Context): LocationsRepositoryImpl {
+        val newRepo =
+            LocationsRepositoryImpl(
+                LocationsRemoteDataSourceImpl(
+                    networkModule.createRxApi(BASE_URL),
+                    ApiResponseMapper()
+                )
+            )
+        locationsRepositoryRx = newRepo
+        return newRepo
+    }
+
     //--------------------
     @Volatile
     var locationsRepositoryRM: LocationsRepositoryRM? = null
@@ -130,11 +152,6 @@ object ServiceLocator {
     }
 
     private var locDatabase: LocationsDatabase? = null
-
-    private fun createLocDataSource(context: Context): LocationsDatabase{
-        val myDb = locDatabase ?: createLocDatabase(context)
-        return myDb
-    }
 
     private fun createLocDatabase(context: Context): LocationsDatabase{
         val result = LocationsDatabase.getInstance(context)

@@ -31,10 +31,14 @@ class App: Application() {
     val getLocationsUseCase: GetLocationsUseCase
         get() = GetLocationsUseCase(locationsRepository)
 
-    val getLocationsRxUseCase: GetLocationsRxUseCase
-        get() = GetLocationsRxUseCase(locationsRepository)
+    //---Rx-----------------
+    private val locationsRepositoryRx: LocationsRepositoryImpl
+        get() = ServiceLocator.provideLocationsRepositoryRx(this)
 
+    val getLocationsRxUseCase: GetLocationsRxUseCase
+        get() = GetLocationsRxUseCase(locationsRepositoryRx)
     //----------------------
+
     private val locationsRepositoryRM: LocationsRepositoryRM
         get() = ServiceLocator.provideLocationsRepositoryRM(this)
 

@@ -46,7 +46,8 @@ class LocationsFragment : Fragment(), HasCustomTitle {
                 }
             })
 
-        locationsViewModel.getLocations(locationsViewModel.searchFilter.value.toString())
+        //locationsViewModel.getLocations(locationsViewModel.searchFilter.value.toString())
+        locationsViewModel.getLocationsRx(locationsViewModel.searchFilter.value.toString())
     }
 
     override fun onCreateView(
