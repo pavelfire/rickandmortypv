@@ -30,14 +30,6 @@ class LocationsFragment : Fragment(), HasCustomTitle {
 
     private lateinit var locationsViewModel: LocationsViewModel
 
-//    private val locationsViewModel: LocationsViewModel by viewModels {
-//        LocationsViewModel.LocationsViewModelFactory(
-//            ((requireActivity().application) as App).getLocationsUseCase,
-//            ((requireActivity().application) as App).getLocationsRxUseCase,
-//            ((requireActivity().application) as App).getLocationsFlowUseCase
-//        )
-//    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -118,8 +110,6 @@ class LocationsFragment : Fragment(), HasCustomTitle {
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
 
                 Log.d("TAG", "on Scoll------totalItemCount: $totalItemCount")
-                //Log.d("TAG", "on Scoll------visibleItemCount: $visibleItemCount")
-                //Log.d("TAG", "on Scoll------lastVisibleItem: $lastVisibleItem")
 
                 locationsViewModel.scrollMore(
                     totalItemCount,

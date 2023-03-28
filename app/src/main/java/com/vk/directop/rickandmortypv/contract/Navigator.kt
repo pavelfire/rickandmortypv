@@ -3,7 +3,7 @@ package com.vk.directop.rickandmortypv.contract
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
-import com.vk.directop.rickandmortypv.CharacterItem
+import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
 
 typealias ResultListener<T> = (T) -> Unit
 
@@ -16,7 +16,7 @@ interface Navigator {
 
     fun showCharactersScreen()
 
-    fun showCharactersScreenDetail(character: CharacterItem)
+    fun showCharactersScreenDetail(character: CharacterDTO)
 
     fun showLocationsScreen()
 

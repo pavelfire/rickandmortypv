@@ -73,14 +73,7 @@ class LocationsViewModel(
         viewModelScope.launch {
             val result = getLocationsFlowUseCase.invoke(queryString)
 
-            val el = result.map { pagingData ->
-                pagingData.map { it.mapToDTO() }
-            }
-
-            val tr = result.asLiveData(Dispatchers.Main)
-
             result.collect { data ->
-                //_locations.value = data.map { it.mapToDTO() }
                 Log.d("MyTAG", "---------Res: $data")
             }
         }
@@ -102,7 +95,6 @@ class LocationsViewModel(
                 }
             }
         }
-
     }
 
     fun scrollMore(

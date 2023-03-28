@@ -13,6 +13,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
 import com.vk.directop.rickandmortypv.contract.Navigator
 import com.vk.directop.rickandmortypv.contract.ResultListener
+import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
 import com.vk.directop.rickandmortypv.databinding.ActivityMainBinding
 import com.vk.directop.rickandmortypv.presentation.CharactersFragment
 import com.vk.directop.rickandmortypv.presentation.EpisodesFragment
@@ -174,7 +175,7 @@ class MainActivity : AppCompatActivity(), Navigator {
 
     override fun showCharactersScreen() {}
 
-    override fun showCharactersScreenDetail(character: CharacterItem) {}
+    override fun showCharactersScreenDetail(character: CharacterDTO) {}
 
     override fun showLocationsScreen() {}
 

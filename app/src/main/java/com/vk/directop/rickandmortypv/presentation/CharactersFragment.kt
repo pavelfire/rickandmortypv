@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vk.directop.rickandmortypv.R
@@ -26,12 +25,6 @@ class CharactersFragment : Fragment(), HasCustomTitle {
     lateinit var charactersViewModelFactory: CharactersViewModel.CharactersViewModelFactory
 
     private lateinit var charactersViewModel: CharactersViewModel
-
-//    private val charactersViewModel: CharactersViewModel by viewModels {
-//        CharactersViewModel.CharactersViewModelFactory(
-//            ((requireActivity().application) as App).getCharactersUseCase,
-//        )
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,12 +81,10 @@ class CharactersFragment : Fragment(), HasCustomTitle {
         charactersViewModel.dataLoading.observe(viewLifecycleOwner) { loading ->
             when (loading) {
                 true -> {
-//                    LayoutUtils.crossFade(binding.progressBar, binding.list)
                     binding.progressBar.visibility = View.VISIBLE
                     binding.list.visibility = View.INVISIBLE
                 }
                 false -> {
-//                    LayoutUtils.crossFade(binding.list, binding.progressBar)
                     binding.progressBar.visibility = View.INVISIBLE
                     binding.list.visibility = View.VISIBLE
                 }

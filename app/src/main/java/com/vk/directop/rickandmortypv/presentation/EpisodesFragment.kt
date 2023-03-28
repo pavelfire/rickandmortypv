@@ -27,12 +27,6 @@ class EpisodesFragment : Fragment(), HasCustomTitle {
 
     private lateinit var episodesViewModel: EpisodesViewModel
 
-//    private val episodesViewModel: EpisodesViewModel by viewModels {
-//        EpisodesViewModel.EpisodesViewModelFactory(
-//            ((requireActivity().application) as App).getEpisodesUseCase
-//        )
-//    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

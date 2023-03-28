@@ -91,7 +91,7 @@ class DataModule {
     }
 
     @Provides
-    fun provideLocationsDatabase(context: Context): LocationsDatabase{
+    fun provideLocationsDatabase(context: Context): LocationsDatabase {
         return LocationsDatabase.getInstance(context)
 
     }
