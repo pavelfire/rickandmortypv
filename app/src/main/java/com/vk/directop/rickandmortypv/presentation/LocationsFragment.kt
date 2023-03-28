@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,22 +18,33 @@ import com.vk.directop.rickandmortypv.app.App
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
 import com.vk.directop.rickandmortypv.data.remote.dto.location.LocationDTO
 import com.vk.directop.rickandmortypv.databinding.FragmentLocationsBinding
+import javax.inject.Inject
 
 class LocationsFragment : Fragment(), HasCustomTitle {
 
     private lateinit var binding: FragmentLocationsBinding
     private lateinit var locationAdapter: LocationAdapter
 
-    private val locationsViewModel: LocationsViewModel by viewModels {
-        LocationsViewModel.LocationsViewModelFactory(
-            ((requireActivity().application) as App).getLocationsUseCase,
-            ((requireActivity().application) as App).getLocationsRxUseCase,
-            ((requireActivity().application) as App).getLocationsFlowUseCase
-        )
-    }
+    @Inject
+    lateinit var locationsViewModelFactory: LocationsViewModel.LocationsViewModelFactory
+
+    private lateinit var locationsViewModel: LocationsViewModel
+
+//    private val locationsViewModel: LocationsViewModel by viewModels {
+//        LocationsViewModel.LocationsViewModelFactory(
+//            ((requireActivity().application) as App).getLocationsUseCase,
+//            ((requireActivity().application) as App).getLocationsRxUseCase,
+//            ((requireActivity().application) as App).getLocationsFlowUseCase
+//        )
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ((requireActivity().application) as App).appComponent.inject(this)
+
+        locationsViewModel = ViewModelProvider(this, locationsViewModelFactory)
+            .get(LocationsViewModel::class.java)
 
         locationAdapter = LocationAdapter(
             object : LocationAdapter.OnLocationListener {

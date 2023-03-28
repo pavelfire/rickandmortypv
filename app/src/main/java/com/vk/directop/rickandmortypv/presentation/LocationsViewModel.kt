@@ -30,7 +30,7 @@ private const val VISIBLE_THRESHOLD = -20
 private const val LAST_SEARCH_QUERY: String = "last_search_query"
 private const val DEFAULT_QUERY = ""
 
-class LocationsViewModel @Inject constructor(
+class LocationsViewModel(
     private val getLocationsUseCase: GetLocationsUseCase,
     private val getLocationsRxUseCase: GetLocationsRxUseCase,
     private val getLocationsFlowUseCase: GetLocationsFlowUseCase,
@@ -143,10 +143,10 @@ class LocationsViewModel @Inject constructor(
             .subscribe(observer)
     }
 
-    class LocationsViewModelFactory(
-        private val getLocationsUseCase: GetLocationsUseCase,
-        private val getLocationsRxUseCase: GetLocationsRxUseCase,
-        private val getLocationsFlowUseCase: GetLocationsFlowUseCase,
+    class LocationsViewModelFactory @Inject constructor(
+        val getLocationsUseCase: GetLocationsUseCase,
+        val getLocationsRxUseCase: GetLocationsRxUseCase,
+        val getLocationsFlowUseCase: GetLocationsFlowUseCase,
     ) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

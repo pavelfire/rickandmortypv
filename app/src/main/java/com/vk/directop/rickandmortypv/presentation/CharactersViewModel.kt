@@ -8,6 +8,7 @@ import com.vk.directop.rickandmortypv.domain.usecases.GetCharactersUseCase
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class CharactersViewModel(
     private val getCharactersUseCase: GetCharactersUseCase,
@@ -74,8 +75,8 @@ class CharactersViewModel(
         }
     }
 
-    class CharactersViewModelFactory(
-        private val getCharactersUseCase: GetCharactersUseCase,
+    class CharactersViewModelFactory @Inject constructor(
+        val getCharactersUseCase: GetCharactersUseCase,
         //private val getSavedCharactersUseCase: GetSavedCharactersUseCase,
         //private val mapper: CharacterApiResponseMapper
     ) : ViewModelProvider.NewInstanceFactory() {

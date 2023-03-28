@@ -8,26 +8,38 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.app.App
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
 import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
 import com.vk.directop.rickandmortypv.databinding.FragmentCharactersBinding
+import javax.inject.Inject
 
 class CharactersFragment : Fragment(), HasCustomTitle {
 
     private lateinit var binding: FragmentCharactersBinding
     private lateinit var characterAdapter: CharacterAdapter
 
-    private val charactersViewModel: CharactersViewModel by viewModels {
-        CharactersViewModel.CharactersViewModelFactory(
-            ((requireActivity().application) as App).getCharactersUseCase,
-        )
-    }
+    @Inject
+    lateinit var charactersViewModelFactory: CharactersViewModel.CharactersViewModelFactory
+
+    private lateinit var charactersViewModel: CharactersViewModel
+
+//    private val charactersViewModel: CharactersViewModel by viewModels {
+//        CharactersViewModel.CharactersViewModelFactory(
+//            ((requireActivity().application) as App).getCharactersUseCase,
+//        )
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ((requireActivity().application) as App).appComponent.inject(this)
+
+        charactersViewModel = ViewModelProvider(this, charactersViewModelFactory)
+            .get(CharactersViewModel::class.java)
 
         characterAdapter = CharacterAdapter(
             object : CharacterAdapter.OnCharacterListener {

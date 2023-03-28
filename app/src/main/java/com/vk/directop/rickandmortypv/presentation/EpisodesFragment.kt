@@ -8,26 +8,38 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.app.App
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
 import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDTO
 import com.vk.directop.rickandmortypv.databinding.FragmentEpisodesBinding
+import javax.inject.Inject
 
 class EpisodesFragment : Fragment(), HasCustomTitle {
 
     private lateinit var binding: FragmentEpisodesBinding
     private lateinit var episodeAdapter: EpisodeAdapter
 
-    private val episodesViewModel: EpisodesViewModel by viewModels {
-        EpisodesViewModel.EpisodesViewModelFactory(
-            ((requireActivity().application) as App).getEpisodesUseCase
-        )
-    }
+    @Inject
+    lateinit var episodesViewModelFactory: EpisodesViewModel.EpisodesViewModelFactory
+
+    private lateinit var episodesViewModel: EpisodesViewModel
+
+//    private val episodesViewModel: EpisodesViewModel by viewModels {
+//        EpisodesViewModel.EpisodesViewModelFactory(
+//            ((requireActivity().application) as App).getEpisodesUseCase
+//        )
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ((requireActivity().application) as App).appComponent.inject(this)
+
+        episodesViewModel = ViewModelProvider(this, episodesViewModelFactory)
+            .get(EpisodesViewModel::class.java)
 
         episodeAdapter = EpisodeAdapter(
             object : EpisodeAdapter.OnEpisodeListener {

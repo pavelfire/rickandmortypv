@@ -8,6 +8,7 @@ import com.vk.directop.rickandmortypv.domain.usecases.GetEpisodesUseCase
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class EpisodesViewModel(
     private val getEpisodesUseCase: GetEpisodesUseCase
@@ -67,8 +68,8 @@ class EpisodesViewModel(
     }
 
 
-    class EpisodesViewModelFactory(
-        private val getEpisodesUseCase: GetEpisodesUseCase
+    class EpisodesViewModelFactory @Inject constructor(
+        val getEpisodesUseCase: GetEpisodesUseCase
     ) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

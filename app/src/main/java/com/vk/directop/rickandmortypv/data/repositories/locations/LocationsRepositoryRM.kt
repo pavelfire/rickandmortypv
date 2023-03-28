@@ -8,10 +8,11 @@ import com.vk.directop.rickandmortypv.data.db.LocationsDatabase
 import com.vk.directop.rickandmortypv.data.entities.LocationEntity
 import com.vk.directop.rickandmortypv.data.remote.RickAndMortyApi
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class LocationsRepositoryRM (
-    private val service: RickAndMortyApi,
-    private val database: LocationsDatabase
+class LocationsRepositoryRM @Inject constructor(
+     val service: RickAndMortyApi,
+     val database: LocationsDatabase
 ) {
 
     @OptIn(ExperimentalPagingApi::class)
