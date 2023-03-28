@@ -2,7 +2,7 @@ package com.vk.directop.rickandmortypv.data.remote.dto.location
 
 import android.os.Parcelable
 import com.vk.directop.rickandmortypv.data.entities.LocationEntity
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class LocationDTO(
