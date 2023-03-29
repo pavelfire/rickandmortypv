@@ -1,34 +1,21 @@
 package com.vk.directop.rickandmortypv.presentation
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDTO
 import com.vk.directop.rickandmortypv.databinding.EpisodeItemBinding
 
-class EpisodeAdapter : RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>() {
+class EpisodeAdapter(
+    private val actionListener: OnEpisodeListener
+) : RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>(), View.OnClickListener {
 
     inner class EpisodeViewHolder(val binding: EpisodeItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    private val diffCallback = object : DiffUtil.ItemCallback<EpisodeDTO>() {
-        override fun areItemsTheSame(oldItem: EpisodeDTO, newItem: EpisodeDTO): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: EpisodeDTO, newItem: EpisodeDTO): Boolean {
-            return oldItem == newItem
-        }
-    }
-
-    private val differ = AsyncListDiffer(this, diffCallback)
-    var episodes: List<EpisodeDTO>
-        get() = differ.currentList
-        set(value) {
-            differ.submitList(value)
-        }
+    private val episodes: ArrayList<EpisodeDTO> = arrayListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -49,9 +36,53 @@ class EpisodeAdapter : RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>() 
             tvName.text = episodeRM.name
             tvEpisode.text = episodeRM.episode
             tvAirDate.text = episodeRM.air_date
+
+            cardView.setOnClickListener {
+                actionListener.onEpisodeClick(episodeRM)
+            }
         }
     }
 
     override fun getItemCount(): Int = episodes.size
+
+    override fun onClick(view: View) {
+        val episodeDTO = view.tag as EpisodeDTO
+        actionListener.onEpisodeClick(episodeDTO)
+    }
+
+    fun submitUpdate(update: List<EpisodeDTO>) {
+        val callback = EpisodesDiffCallback(episodes, update)
+        val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(callback)
+
+        episodes.clear()
+        episodes.addAll(update)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    class EpisodesDiffCallback(
+        private val oldLocations: List<EpisodeDTO>,
+        private val newLocations: List<EpisodeDTO>
+    ) :
+        DiffUtil.Callback() {
+        override fun getOldListSize(): Int {
+            return oldLocations.size
+        }
+
+        override fun getNewListSize(): Int {
+            return newLocations.size
+        }
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldLocations[oldItemPosition].id == newLocations[newItemPosition].id
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldLocations[oldItemPosition].url == newLocations[newItemPosition].url
+        }
+    }
+
+    interface OnEpisodeListener {
+        fun onEpisodeClick(episode: EpisodeDTO)
+    }
 
 }

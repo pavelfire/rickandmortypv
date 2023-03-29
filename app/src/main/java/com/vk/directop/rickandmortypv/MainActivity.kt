@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity(), Navigator {
             FragmentManager.POP_BACK_STACK_INCLUSIVE
         )
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, CharactersFragment.newInstance("", ""))
+            .replace(R.id.fragment_container, CharactersFragment())
             .commit()
         binding.bottomNavigationView.selectedItemId = R.id.characters
     }
@@ -173,19 +173,19 @@ class MainActivity : AppCompatActivity(), Navigator {
     }
 
     override fun showCharactersScreen() {
-        TODO("Not yet implemented")
+
     }
 
     override fun showCharactersScreenDetail(character: CharacterItem) {
-        TODO("Not yet implemented")
+
     }
 
     override fun showLocationsScreen() {
-        TODO("Not yet implemented")
+
     }
 
     override fun showEpisodesScreen() {
-        TODO("Not yet implemented")
+
     }
 
     override fun goBack() {

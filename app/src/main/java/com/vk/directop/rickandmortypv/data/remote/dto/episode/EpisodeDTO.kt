@@ -1,5 +1,9 @@
 package com.vk.directop.rickandmortypv.data.remote.dto.episode
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class EpisodeDTO(
     val air_date: String,
     val characters: List<String>,
@@ -8,4 +12,4 @@ data class EpisodeDTO(
     val id: Int,
     val name: String,
     val url: String
-)
+) : Parcelable

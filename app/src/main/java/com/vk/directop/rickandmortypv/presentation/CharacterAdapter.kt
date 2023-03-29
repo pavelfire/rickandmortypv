@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -20,22 +19,7 @@ class CharacterAdapter(
     inner class CharacterViewHolder(val binding: CharacterItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    private val diffCallback = object : DiffUtil.ItemCallback<CharacterDTO>() {
-        override fun areItemsTheSame(oldItem: CharacterDTO, newItem: CharacterDTO): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: CharacterDTO, newItem: CharacterDTO): Boolean {
-            return oldItem == newItem
-        }
-    }
-
-    private val differ = AsyncListDiffer(this, diffCallback)
-    var characters: List<CharacterDTO>
-        get() = differ.currentList
-        set(value) {
-            differ.submitList(value)
-        }
+    private val characters: ArrayList<CharacterDTO> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         return CharacterViewHolder(
@@ -54,9 +38,9 @@ class CharacterAdapter(
             tvSpecies.text = characterRM.species
             tvStatus.text = characterRM.status
             tvGender.text = characterRM.gender
-            if (characterRM.gender == "Male"){
+            if (characterRM.gender == "Male") {
                 tvGender.setTextColor(Color.BLUE)
-            }else{
+            } else {
                 tvGender.setTextColor(Color.RED)
             }
             if (characterRM.image.isNotBlank()) {
@@ -81,6 +65,37 @@ class CharacterAdapter(
         val characterDTO = view.tag as CharacterDTO
         Log.d("TAG", "Clicked onClick in adapter ${characterDTO.name}")
         actionListener.onCharacterClick(characterDTO)
+    }
+
+    fun submitUpdate(update: List<CharacterDTO>) {
+        val callback = CharactersDiffCallback(characters, update)
+        val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(callback)
+
+        characters.clear()
+        characters.addAll(update)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    class CharactersDiffCallback(
+        private val oldCharacters: List<CharacterDTO>,
+        private val newCharacters: List<CharacterDTO>
+    ) :
+        DiffUtil.Callback() {
+        override fun getOldListSize(): Int {
+            return oldCharacters.size
+        }
+
+        override fun getNewListSize(): Int {
+            return newCharacters.size
+        }
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldCharacters[oldItemPosition].id == newCharacters[newItemPosition].id
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldCharacters[oldItemPosition].url == newCharacters[newItemPosition].url
+        }
     }
 
     interface OnCharacterListener {
