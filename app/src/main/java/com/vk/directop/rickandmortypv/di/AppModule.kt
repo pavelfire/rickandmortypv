@@ -14,10 +14,4 @@ class AppModule(val context: Context) {
         return context
     }
 
-    @Provides
-    fun provideCharactersViewModelFactory(
-        getCharactersUseCase: GetCharactersUseCase,
-    ): CharactersViewModel.CharactersViewModelFactory {
-        return CharactersViewModel.CharactersViewModelFactory(getCharactersUseCase = getCharactersUseCase)
-    }
 }
