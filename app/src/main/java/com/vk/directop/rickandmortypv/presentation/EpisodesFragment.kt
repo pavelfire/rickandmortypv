@@ -7,13 +7,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.app.App
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
-import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDTO
+import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDto
 import com.vk.directop.rickandmortypv.databinding.FragmentEpisodesBinding
 import javax.inject.Inject
 
@@ -37,7 +36,7 @@ class EpisodesFragment : Fragment(), HasCustomTitle {
 
         episodeAdapter = EpisodeAdapter(
             object : EpisodeAdapter.OnEpisodeListener {
-                override fun onEpisodeClick(episode: EpisodeDTO) {
+                override fun onEpisodeClick(episode: EpisodeDto) {
                     requireActivity().supportFragmentManager.beginTransaction()
                         .replace(
                             R.id.fragment_container, EpisodeDetailFragment.newInstance(episode)
