@@ -9,6 +9,6 @@ interface CharactersLocalDataSource {
 
     suspend fun characterDeleteFromDb(character: CharacterDTO)
 
-    suspend fun getDbCharacters(name: String): Flow<List<CharacterDTO>>
+    suspend fun getDbCharacters(charactersParams: CharactersParams): Flow<List<CharacterDTO>>
 
 }

@@ -13,6 +13,7 @@ import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.app.App
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
 import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
+import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersParams
 import com.vk.directop.rickandmortypv.databinding.FragmentCharactersBinding
 import javax.inject.Inject
 
@@ -46,7 +47,17 @@ class CharactersFragment : Fragment(), HasCustomTitle {
                 }
             })
 
-        charactersViewModel.getCharacters(charactersViewModel.searchFilter.value.toString())
+        getCharacters(
+            CharactersParams(
+                name = charactersViewModel.searchFilter.value.toString(),
+                gender = charactersViewModel.genderFilter.value.toString()
+            )
+        )
+
+    }
+
+    private fun getCharacters(charactersParams: CharactersParams) {
+        charactersViewModel.getCharacters(charactersParams)
     }
 
     override fun onCreateView(
@@ -73,6 +84,22 @@ class CharactersFragment : Fragment(), HasCustomTitle {
                 return false
             }
         })
+
+        binding.radioGroupGender.setOnCheckedChangeListener { _, i ->
+            when (i) {
+                R.id.rbAll -> charactersViewModel.setGender("")
+                R.id.rbMale -> charactersViewModel.setGender("male")
+                R.id.rbFemale -> charactersViewModel.setGender("female")
+                R.id.rbGenderless -> charactersViewModel.setGender("genderless")
+                R.id.rbUnknown -> charactersViewModel.setGender("unknown")
+            }
+            getCharacters(
+                CharactersParams(
+                    name = charactersViewModel.searchFilter.value.toString(),
+                    gender = charactersViewModel.genderFilter.value.toString()
+                )
+            )
+        }
 
         charactersViewModel.characters.observe(viewLifecycleOwner) {
             characterAdapter.submitUpdate(it)

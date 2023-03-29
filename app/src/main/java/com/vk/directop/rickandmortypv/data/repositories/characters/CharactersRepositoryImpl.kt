@@ -5,17 +5,17 @@ import com.vk.directop.rickandmortypv.domain.common.Resultss
 import com.vk.directop.rickandmortypv.domain.repositories.CharactersRepository
 import kotlinx.coroutines.flow.Flow
 
-class CharactersRepositoryImpl (
-   private val localDataSource: CharactersLocalDataSource,
+class CharactersRepositoryImpl(
+    private val localDataSource: CharactersLocalDataSource,
     private val remoteDataSource: CharactersRemoteDataSource,
-        ): CharactersRepository{
+) : CharactersRepository {
 
-    override suspend fun getRemoteCharacters(name: String): Resultss<List<CharacterDTO>> {
-        return remoteDataSource.getCharacters(name)
+    override suspend fun getRemoteCharacters(charactersParams: CharactersParams): Resultss<List<CharacterDTO>> {
+        return remoteDataSource.getCharacters(charactersParams)
     }
 
-    override suspend fun getSavedCharacters(name: String): Flow<List<CharacterDTO>> {
-        return localDataSource.getDbCharacters(name)
+    override suspend fun getSavedCharacters(charactersParams: CharactersParams): Flow<List<CharacterDTO>> {
+        return localDataSource.getDbCharacters(charactersParams)
     }
 
     override suspend fun characterSaveToDb(character: Array<CharacterDTO>) {

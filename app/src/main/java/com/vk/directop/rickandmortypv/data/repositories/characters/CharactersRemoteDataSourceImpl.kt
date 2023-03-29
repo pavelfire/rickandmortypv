@@ -13,10 +13,14 @@ class CharactersRemoteDataSourceImpl(
     private val mapper: ApiResponseMapper,
 ) : CharactersRemoteDataSource {
 
-    override suspend fun getCharacters(name: String): Resultss<List<CharacterDTO>> =
+    override suspend fun getCharacters(charactersParams: CharactersParams): Resultss<List<CharacterDTO>> =
         withContext(Dispatchers.IO) {
             try {
-                val response = service.getCharacters(name = name)
+                val response = service.getCharacters(
+                    name = charactersParams.name,
+                    gender = charactersParams.gender,
+                    status = charactersParams.status
+                    )
                 if (response.isSuccessful) {
                     return@withContext Resultss.Success(mapper.toMyList(response.body()!!))
                 } else {

@@ -1,10 +1,9 @@
 package com.vk.directop.rickandmortypv.presentation
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.*
 import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
-import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersLocalDataSourceImpl
+import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersParams
 import com.vk.directop.rickandmortypv.domain.common.Resultss
 import com.vk.directop.rickandmortypv.domain.usecases.GetCharactersUseCase
 import com.vk.directop.rickandmortypv.domain.usecases.GetSavedCharactersUseCase
@@ -35,28 +34,45 @@ class CharactersViewModel(
     private val _searchFilter = MutableLiveData("")
     val searchFilter: LiveData<String> = _searchFilter
 
+    private val _genderFilter = MutableLiveData("")
+    val genderFilter: LiveData<String> = _genderFilter
+
     private val editTextSubject = PublishSubject.create<String>()
+
+    fun setGender(gender: String) {
+        _genderFilter.value = gender
+    }
 
     @SuppressLint("CheckResult")
     fun searchName(text: String, sendButton: Boolean) {
 
         _searchFilter.value = text
 
-        if (sendButton) getCharacters(_searchFilter.value.toString())
+        if (sendButton) getCharacters(
+            CharactersParams(
+                name = _searchFilter.value.toString(),
+                gender = genderFilter.value ?: ""
+            )
+        )
         else {
             editTextSubject.onNext(text)
             editTextSubject
                 .debounce(2000, TimeUnit.MILLISECONDS)
                 .subscribe {
-                    getCharacters(_searchFilter.value.toString())
+                    getCharacters(
+                        CharactersParams(
+                            name = _searchFilter.value.toString(),
+                            gender = genderFilter.value ?: ""
+                        )
+                    )
                 }
         }
     }
 
-    fun getCharacters(name: String) {
+    fun getCharacters(charactersParams: CharactersParams) {
         viewModelScope.launch {
             _dataLoading.postValue(true)
-            when (val charactersResult = getCharactersUseCase.invoke(name)) {
+            when (val charactersResult = getCharactersUseCase.invoke(charactersParams)) {
                 is Resultss.Success -> {
                     _remoteCharacters.clear()
                     _remoteCharacters.addAll(charactersResult.data)
@@ -66,7 +82,7 @@ class CharactersViewModel(
 
                     saveCharactersUseCase(_remoteCharacters.toTypedArray())
 
-                    val charactersFlow = getSavedCharactersUseCase.invoke(name)
+                    val charactersFlow = getSavedCharactersUseCase.invoke(charactersParams)
                     charactersFlow.collect { characters ->
                         //_characters.value = characters
                         _dataLoading.postValue(false)

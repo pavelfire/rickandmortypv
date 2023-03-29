@@ -1,15 +1,8 @@
 package com.vk.directop.rickandmortypv.presentation
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.*
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.map
-import com.vk.directop.rickandmortypv.data.entities.LocationEntity
-import com.vk.directop.rickandmortypv.data.entities.mapToDTO
 import com.vk.directop.rickandmortypv.data.remote.dto.location.LocationDTO
-import com.vk.directop.rickandmortypv.data.repositories.locations.LocationsRepositoryRM
 import com.vk.directop.rickandmortypv.domain.common.Resultss
 import com.vk.directop.rickandmortypv.domain.usecases.GetLocationsFlowUseCase
 import com.vk.directop.rickandmortypv.domain.usecases.GetLocationsRxUseCase
@@ -18,17 +11,11 @@ import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 private const val VISIBLE_THRESHOLD = -20
-private const val LAST_SEARCH_QUERY: String = "last_search_query"
-private const val DEFAULT_QUERY = ""
 
 class LocationsViewModel(
     private val getLocationsUseCase: GetLocationsUseCase,
@@ -113,7 +100,7 @@ class LocationsViewModel(
         totalItemCount: Int
     ) {
         if (visibleItemCount + lastVisibleItemPosition + VISIBLE_THRESHOLD >= totalItemCount) {
-            Log.d("TAG", "Need load  $totalItemCount")
+
         }
     }
 
@@ -122,7 +109,6 @@ class LocationsViewModel(
         val observer = object : SingleObserver<List<LocationDTO>> {
             override fun onSuccess(response: List<LocationDTO>) {
                 _locations.value = response
-                Log.d("Tag", "------------on success--loc on Rx--------")
                 _dataLoading.postValue(false)
             }
 

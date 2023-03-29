@@ -26,12 +26,12 @@ class CharactersLocalDataSourceImpl @Inject constructor(
         characterDao.deleteCharacter(characterEntityMapper.toCharacterEntity(character))
     }
 
-    override suspend fun getDbCharacters(name: String): Flow<List<CharacterDTO>> {
+    override suspend fun getDbCharacters(charactersParams: CharactersParams): Flow<List<CharacterDTO>> {
         val savedCharactersFlow = characterDao.getSavedCharacters()
-        return if (name != "") {
+        return if (charactersParams.name != "") {
             savedCharactersFlow.map { list ->
                 list.filter {
-                    it.name.uppercase() == name.uppercase()
+                    it.name.uppercase() == charactersParams.name.uppercase()
                 }.map { element ->
                     characterEntityMapper.toCharacterDTO(element)
                 }

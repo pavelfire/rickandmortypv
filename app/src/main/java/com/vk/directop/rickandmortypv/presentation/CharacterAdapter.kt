@@ -1,7 +1,6 @@
 package com.vk.directop.rickandmortypv.presentation
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +62,6 @@ class CharacterAdapter(
 
     override fun onClick(view: View) {
         val characterDTO = view.tag as CharacterDTO
-        Log.d("TAG", "Clicked onClick in adapter ${characterDTO.name}")
         actionListener.onCharacterClick(characterDTO)
     }
 
