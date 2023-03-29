@@ -1,10 +1,14 @@
 package com.vk.directop.rickandmortypv.presentation
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.*
 import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
+import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersLocalDataSourceImpl
 import com.vk.directop.rickandmortypv.domain.common.Resultss
 import com.vk.directop.rickandmortypv.domain.usecases.GetCharactersUseCase
+import com.vk.directop.rickandmortypv.domain.usecases.GetSavedCharactersUseCase
+import com.vk.directop.rickandmortypv.domain.usecases.SaveCharactersUseCase
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -12,7 +16,8 @@ import javax.inject.Inject
 
 class CharactersViewModel(
     private val getCharactersUseCase: GetCharactersUseCase,
-    //private val getSavedCharactersUseCase: GetSavedCharactersUseCase,
+    private val getSavedCharactersUseCase: GetSavedCharactersUseCase,
+    private val saveCharactersUseCase: SaveCharactersUseCase,
     //private val mapper: CharacterApiResponseMapper
 ) : ViewModel() {
 
@@ -59,11 +64,13 @@ class CharactersViewModel(
                     _characters.value = _remoteCharacters
                     _dataLoading.postValue(false)
 
-//                    val charactersFlow = getSavedCharactersUseCase.invoke()
-//                    charactersFlow.collect{ charact ->
-//                        _characters.value = _remoteCharacters
-//                     _dataLoading.postValue(false)
-//                    }
+                    saveCharactersUseCase(_remoteCharacters.toTypedArray())
+
+                    val charactersFlow = getSavedCharactersUseCase.invoke(name)
+                    charactersFlow.collect { characters ->
+                        //_characters.value = characters
+                        _dataLoading.postValue(false)
+                    }
                 }
                 is Resultss.Error -> {
                     _dataLoading.postValue(false)
@@ -76,15 +83,17 @@ class CharactersViewModel(
     }
 
     class CharactersViewModelFactory @Inject constructor(
-        val getCharactersUseCase: GetCharactersUseCase,
-        //private val getSavedCharactersUseCase: GetSavedCharactersUseCase,
+        private val getCharactersUseCase: GetCharactersUseCase,
+        private val getSavedCharactersUseCase: GetSavedCharactersUseCase,
+        private val saveCharactersUseCase: SaveCharactersUseCase,
         //private val mapper: CharacterApiResponseMapper
     ) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return CharactersViewModel(
                 getCharactersUseCase,
-                //getSavedCharactersUseCase
+                getSavedCharactersUseCase,
+                saveCharactersUseCase
                 //mapper
             ) as T
         }

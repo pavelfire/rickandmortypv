@@ -1,12 +1,12 @@
 package com.vk.directop.rickandmortypv.di
 
 import android.content.Context
+import com.vk.directop.rickandmortypv.data.db.CharactersDatabase
 import com.vk.directop.rickandmortypv.data.db.LocationsDatabase
 import com.vk.directop.rickandmortypv.data.mappers.ApiResponseMapper
+import com.vk.directop.rickandmortypv.data.mappers.CharacterEntityMapper
 import com.vk.directop.rickandmortypv.data.remote.RickAndMortyApi
-import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersRemoteDataSource
-import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersRemoteDataSourceImpl
-import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersRepositoryImpl
+import com.vk.directop.rickandmortypv.data.repositories.characters.*
 import com.vk.directop.rickandmortypv.data.repositories.episodes.EpisodesRemoteDataSource
 import com.vk.directop.rickandmortypv.data.repositories.episodes.EpisodesRemoteDataSourceImpl
 import com.vk.directop.rickandmortypv.data.repositories.episodes.EpisodesRepositoryImpl
@@ -19,6 +19,7 @@ import com.vk.directop.rickandmortypv.domain.repositories.EpisodesRepository
 import com.vk.directop.rickandmortypv.domain.repositories.LocationsRepository
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -61,8 +62,20 @@ class DataModule {
     }
 
     @Provides
-    fun provideCharactersRepository(): CharactersRepository {
+    fun provideCharactersLocalDataSource(context: Context): CharactersLocalDataSource {
+
+        return CharactersLocalDataSourceImpl(
+            CharactersDatabase.getDatabase(context).characterDao(),
+            Dispatchers.IO,
+            CharacterEntityMapper()
+        )
+    }
+
+
+    @Provides
+    fun provideCharactersRepository(context: Context): CharactersRepository {
         return CharactersRepositoryImpl(
+            provideCharactersLocalDataSource(context),
             provideCharactersRemoteDataSource()
         )
     }
@@ -93,7 +106,6 @@ class DataModule {
     @Provides
     fun provideLocationsDatabase(context: Context): LocationsDatabase {
         return LocationsDatabase.getInstance(context)
-
     }
 
     @Provides

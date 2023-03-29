@@ -71,10 +71,12 @@ class LocationsViewModel(
     fun getLocations(queryString: String) {
 
         viewModelScope.launch {
-            val result = getLocationsFlowUseCase.invoke(queryString)
-
-            result.collect { data ->
-                Log.d("MyTAG", "---------Res: $data")
+            val locationsFlow = getLocationsFlowUseCase.invoke(queryString)
+            locationsFlow.collect {
+                _locations.map {
+                    _locations.value = (_locations.value as ArrayList<LocationDTO>).plus(it)
+                }
+                _dataLoading.postValue(false)
             }
         }
         viewModelScope.launch {
@@ -86,6 +88,14 @@ class LocationsViewModel(
 
                     _locations.value = _remoteLocations
                     _dataLoading.postValue(false)
+
+                    val locationsFlow = getLocationsFlowUseCase.invoke(queryString)
+                    locationsFlow.collect {
+                        _locations.map {
+                            _locations.value = (_locations.value as ArrayList<LocationDTO>).plus(it)
+                        }
+                        _dataLoading.postValue(false)
+                    }
                 }
                 is Resultss.Error -> {
                     _dataLoading.postValue(false)
@@ -103,10 +113,7 @@ class LocationsViewModel(
         totalItemCount: Int
     ) {
         if (visibleItemCount + lastVisibleItemPosition + VISIBLE_THRESHOLD >= totalItemCount) {
-            Log.d(
-                "TAG",
-                "Need load ${visibleItemCount + lastVisibleItemPosition + VISIBLE_THRESHOLD}  $totalItemCount"
-            )
+            Log.d("TAG", "Need load  $totalItemCount")
         }
     }
 
@@ -136,9 +143,9 @@ class LocationsViewModel(
     }
 
     class LocationsViewModelFactory @Inject constructor(
-        val getLocationsUseCase: GetLocationsUseCase,
-        val getLocationsRxUseCase: GetLocationsRxUseCase,
-        val getLocationsFlowUseCase: GetLocationsFlowUseCase,
+        private val getLocationsUseCase: GetLocationsUseCase,
+        private val getLocationsRxUseCase: GetLocationsRxUseCase,
+        private val getLocationsFlowUseCase: GetLocationsFlowUseCase,
     ) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

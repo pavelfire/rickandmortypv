@@ -6,7 +6,7 @@ import com.vk.directop.rickandmortypv.domain.repositories.CharactersRepository
 import kotlinx.coroutines.flow.Flow
 
 class CharactersRepositoryImpl (
-   //private val localDataSource: CharactersLocalDataSource,
+   private val localDataSource: CharactersLocalDataSource,
     private val remoteDataSource: CharactersRemoteDataSource,
         ): CharactersRepository{
 
@@ -14,16 +14,16 @@ class CharactersRepositoryImpl (
         return remoteDataSource.getCharacters(name)
     }
 
-//    override suspend fun getSavedCharacters(): Flow<List<CharacterDTO>> {
-//        return localDataSource.getDbCharacters()
-//    }
-//
-//    override suspend fun characterSaveToDb(character: CharacterDTO) {
-//        return localDataSource.characterSaveToDb(character)
-//    }
-//
-//    override suspend fun characterDeleteFromDb(character: CharacterDTO) {
-//        return localDataSource.characterDeleteFromDb(character)
-//    }
+    override suspend fun getSavedCharacters(name: String): Flow<List<CharacterDTO>> {
+        return localDataSource.getDbCharacters(name)
+    }
+
+    override suspend fun characterSaveToDb(character: Array<CharacterDTO>) {
+        return localDataSource.characterSaveToDb(character)
+    }
+
+    override suspend fun characterDeleteFromDb(character: CharacterDTO) {
+        return localDataSource.characterDeleteFromDb(character)
+    }
 
 }

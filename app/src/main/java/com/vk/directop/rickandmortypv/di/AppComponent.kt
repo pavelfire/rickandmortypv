@@ -6,7 +6,7 @@ import com.vk.directop.rickandmortypv.presentation.EpisodesFragment
 import com.vk.directop.rickandmortypv.presentation.LocationsFragment
 import dagger.Component
 
-@Component (modules = [DataModule::class, AppModule::class, DomainModule::class])
+@Component (modules = [DataModule::class, AppModule::class])
 interface AppComponent {
 
     fun inject(charactersFragment: CharactersFragment)

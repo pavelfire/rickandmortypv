@@ -8,11 +8,11 @@ interface CharactersRepository {
 
     suspend fun getRemoteCharacters(name: String): Resultss<List<CharacterDTO>>
 
-    //suspend fun getSavedCharacters(): Flow<List<CharacterDTO>>
+    suspend fun getSavedCharacters(name: String): Flow<List<CharacterDTO>>
 
-    //suspend fun characterSaveToDb(character: CharacterDTO)
+    suspend fun characterSaveToDb(character: Array<CharacterDTO>)
 
-    //suspend fun characterDeleteFromDb(character: CharacterDTO)
+    suspend fun characterDeleteFromDb(character: CharacterDTO)
 
 
 }

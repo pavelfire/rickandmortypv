@@ -5,10 +5,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface CharactersLocalDataSource {
 
-    suspend fun characterSaveToDb(character: CharacterDTO)
+    suspend fun characterSaveToDb(character: Array<CharacterDTO>)
 
     suspend fun characterDeleteFromDb(character: CharacterDTO)
 
-    suspend fun getDbCharacters(): Flow<List<CharacterDTO>>
+    suspend fun getDbCharacters(name: String): Flow<List<CharacterDTO>>
 
 }

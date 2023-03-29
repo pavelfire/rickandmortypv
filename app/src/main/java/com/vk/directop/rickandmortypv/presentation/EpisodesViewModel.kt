@@ -69,7 +69,7 @@ class EpisodesViewModel(
 
 
     class EpisodesViewModelFactory @Inject constructor(
-        val getEpisodesUseCase: GetEpisodesUseCase
+        private val getEpisodesUseCase: GetEpisodesUseCase
     ) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
