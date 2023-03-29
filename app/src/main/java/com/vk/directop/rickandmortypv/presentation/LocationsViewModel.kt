@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.*
 import com.vk.directop.rickandmortypv.data.remote.dto.location.LocationDTO
 import com.vk.directop.rickandmortypv.domain.common.Resultss
+import com.vk.directop.rickandmortypv.domain.usecases.GetLocationsFlowUseCase
 import com.vk.directop.rickandmortypv.domain.usecases.GetLocationsRxUseCase
 import com.vk.directop.rickandmortypv.domain.usecases.GetLocationsUseCase
 import io.reactivex.SingleObserver
@@ -12,10 +13,14 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+
+private const val VISIBLE_THRESHOLD = -20
 
 class LocationsViewModel(
     private val getLocationsUseCase: GetLocationsUseCase,
-    private val getLocationsRxUseCase: GetLocationsRxUseCase
+    private val getLocationsRxUseCase: GetLocationsRxUseCase,
+    private val getLocationsFlowUseCase: GetLocationsFlowUseCase,
 ) : ViewModel() {
 
     private val _dataLoading = MutableLiveData(true)
@@ -27,8 +32,6 @@ class LocationsViewModel(
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    private val _remoteLocations = arrayListOf<LocationDTO>()
-
     private val _searchFilter = MutableLiveData("")
     val searchFilter: LiveData<String> = _searchFilter
 
@@ -39,35 +42,24 @@ class LocationsViewModel(
 
         _searchFilter.value = text
 
-        if (sendButton) getLocations(_searchFilter.value.toString())
+        if (sendButton) getLocationsRx(_searchFilter.value.toString())
         else {
             editTextSubject.onNext(text)
             editTextSubject
                 .debounce(2000, TimeUnit.MILLISECONDS)
                 .subscribe {
-                    getLocations(_searchFilter.value.toString())
+                    getLocationsRx(_searchFilter.value.toString())
                 }
         }
     }
 
-    fun getLocations(name: String) {
-        viewModelScope.launch {
-            _dataLoading.postValue(true)
-            when (val locationsResult = getLocationsUseCase.invoke(name)) {
-                is Resultss.Success -> {
-                    _remoteLocations.clear()
-                    _remoteLocations.addAll(locationsResult.data)
+    fun scrollMore(
+        visibleItemCount: Int,
+        lastVisibleItemPosition: Int,
+        totalItemCount: Int
+    ) {
+        if (visibleItemCount + lastVisibleItemPosition + VISIBLE_THRESHOLD >= totalItemCount) {
 
-                    _locations.value = _remoteLocations
-                    _dataLoading.postValue(false)
-                }
-                is Resultss.Error -> {
-                    _dataLoading.postValue(false)
-                    _locations.value = emptyList()
-                    _error.postValue(locationsResult.exception.message)
-                    _dataLoading.postValue(false)
-                }
-            }
         }
     }
 
@@ -76,32 +68,36 @@ class LocationsViewModel(
         val observer = object : SingleObserver<List<LocationDTO>> {
             override fun onSuccess(response: List<LocationDTO>) {
                 _locations.value = response
+                _dataLoading.postValue(false)
             }
 
             override fun onError(e: Throwable) {
                 _error.value = e.message
+                _dataLoading.postValue(false)
             }
 
             override fun onSubscribe(d: Disposable) {}
         }
 
         getLocationsRxUseCase.invoke(name)
-            .map { resp ->
-                resp.body()
+            .map { response ->
+                response.body()!!.results
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe()//observer)
+            .subscribe(observer)
     }
 
-    class LocationsViewModelFactory(
+    class LocationsViewModelFactory @Inject constructor(
         private val getLocationsUseCase: GetLocationsUseCase,
-        private val getLocationsRxUseCase: GetLocationsRxUseCase
+        private val getLocationsRxUseCase: GetLocationsRxUseCase,
+        private val getLocationsFlowUseCase: GetLocationsFlowUseCase,
     ) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return LocationsViewModel(
                 getLocationsUseCase,
-                getLocationsRxUseCase
+                getLocationsRxUseCase,
+                getLocationsFlowUseCase
             ) as T
         }
     }

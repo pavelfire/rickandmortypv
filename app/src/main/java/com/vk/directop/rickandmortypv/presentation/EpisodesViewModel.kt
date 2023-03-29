@@ -2,12 +2,13 @@ package com.vk.directop.rickandmortypv.presentation
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.*
-import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDTO
+import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDto
 import com.vk.directop.rickandmortypv.domain.common.Resultss
 import com.vk.directop.rickandmortypv.domain.usecases.GetEpisodesUseCase
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class EpisodesViewModel(
     private val getEpisodesUseCase: GetEpisodesUseCase
@@ -16,13 +17,13 @@ class EpisodesViewModel(
     private val _dataLoading = MutableLiveData(true)
     val dataLoading: LiveData<Boolean> = _dataLoading
 
-    private val _episodes = MutableLiveData<List<EpisodeDTO>>()
-    val episodes: LiveData<List<EpisodeDTO>> = _episodes
+    private val _episodes = MutableLiveData<List<EpisodeDto>>()
+    val episodes: LiveData<List<EpisodeDto>> = _episodes
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    private val _remoteEpisodes = arrayListOf<EpisodeDTO>()
+    private val _remoteEpisodes = arrayListOf<EpisodeDto>()
 
     private val _searchFilter = MutableLiveData<String>("")
     val searchFilter: LiveData<String> = _searchFilter
@@ -67,7 +68,7 @@ class EpisodesViewModel(
     }
 
 
-    class EpisodesViewModelFactory(
+    class EpisodesViewModelFactory @Inject constructor(
         private val getEpisodesUseCase: GetEpisodesUseCase
     ) : ViewModelProvider.NewInstanceFactory() {
 

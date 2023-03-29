@@ -5,11 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.vk.directop.rickandmortypv.R
-import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
-import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDTO
-import com.vk.directop.rickandmortypv.databinding.FragmentCharacterDetailBinding
+import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDto
 import com.vk.directop.rickandmortypv.databinding.FragmentEpisodeDetailBinding
 
 private const val ARG_CHARACTER = "ARG_CHARACTER"
@@ -18,7 +14,7 @@ class EpisodeDetailFragment : Fragment() {
 
     lateinit var binding: FragmentEpisodeDetailBinding
 
-    private var episodeDTO: EpisodeDTO? = null
+    private var episodeDTO: EpisodeDto? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +44,7 @@ class EpisodeDetailFragment : Fragment() {
     companion object {
 
         @JvmStatic
-        fun newInstance(episodeDTO: EpisodeDTO) =
+        fun newInstance(episodeDTO: EpisodeDto) =
             EpisodeDetailFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_CHARACTER, episodeDTO)

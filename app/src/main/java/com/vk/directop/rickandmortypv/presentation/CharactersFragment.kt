@@ -7,28 +7,33 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.app.App
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
 import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
+import com.vk.directop.rickandmortypv.data.repositories.characters.CharactersParams
 import com.vk.directop.rickandmortypv.databinding.FragmentCharactersBinding
-import kotlinx.android.synthetic.main.fragment_characters.*
+import javax.inject.Inject
 
 class CharactersFragment : Fragment(), HasCustomTitle {
 
     private lateinit var binding: FragmentCharactersBinding
     private lateinit var characterAdapter: CharacterAdapter
 
-    private val charactersViewModel: CharactersViewModel by viewModels {
-        CharactersViewModel.CharactersViewModelFactory(
-            ((requireActivity().application) as App).getCharactersUseCase,
-        )
-    }
+    @Inject
+    lateinit var charactersViewModelFactory: CharactersViewModel.CharactersViewModelFactory
+
+    private lateinit var charactersViewModel: CharactersViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ((requireActivity().application) as App).appComponent.inject(this)
+
+        charactersViewModel = ViewModelProvider(this, charactersViewModelFactory)
+            .get(CharactersViewModel::class.java)
 
         characterAdapter = CharacterAdapter(
             object : CharacterAdapter.OnCharacterListener {
@@ -42,7 +47,17 @@ class CharactersFragment : Fragment(), HasCustomTitle {
                 }
             })
 
-        charactersViewModel.getCharacters(charactersViewModel.searchFilter.value.toString())
+        getCharacters(
+            CharactersParams(
+                name = charactersViewModel.searchFilter.value.toString(),
+                gender = charactersViewModel.genderFilter.value.toString()
+            )
+        )
+
+    }
+
+    private fun getCharacters(charactersParams: CharactersParams) {
+        charactersViewModel.getCharacters(charactersParams)
     }
 
     override fun onCreateView(
@@ -70,6 +85,22 @@ class CharactersFragment : Fragment(), HasCustomTitle {
             }
         })
 
+        binding.radioGroupGender.setOnCheckedChangeListener { _, i ->
+            when (i) {
+                R.id.rbAll -> charactersViewModel.setGender("")
+                R.id.rbMale -> charactersViewModel.setGender("male")
+                R.id.rbFemale -> charactersViewModel.setGender("female")
+                R.id.rbGenderless -> charactersViewModel.setGender("genderless")
+                R.id.rbUnknown -> charactersViewModel.setGender("unknown")
+            }
+            getCharacters(
+                CharactersParams(
+                    name = charactersViewModel.searchFilter.value.toString(),
+                    gender = charactersViewModel.genderFilter.value.toString()
+                )
+            )
+        }
+
         charactersViewModel.characters.observe(viewLifecycleOwner) {
             characterAdapter.submitUpdate(it)
         }
@@ -77,19 +108,17 @@ class CharactersFragment : Fragment(), HasCustomTitle {
         charactersViewModel.dataLoading.observe(viewLifecycleOwner) { loading ->
             when (loading) {
                 true -> {
-//                    LayoutUtils.crossFade(binding.progressBar, binding.list)
                     binding.progressBar.visibility = View.VISIBLE
                     binding.list.visibility = View.INVISIBLE
                 }
                 false -> {
-//                    LayoutUtils.crossFade(binding.list, binding.progressBar)
                     binding.progressBar.visibility = View.INVISIBLE
                     binding.list.visibility = View.VISIBLE
                 }
             }
         }
 
-        list.apply {
+        binding.list.apply {
             adapter = characterAdapter
             layoutManager = GridLayoutManager(context, COLUMNS_COUNT)
         }

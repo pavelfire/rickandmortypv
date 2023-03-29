@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDTO
+import com.vk.directop.rickandmortypv.data.remote.dto.episode.EpisodeDto
 import com.vk.directop.rickandmortypv.databinding.EpisodeItemBinding
 
 class EpisodeAdapter(
@@ -15,7 +15,7 @@ class EpisodeAdapter(
     inner class EpisodeViewHolder(val binding: EpisodeItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    private val episodes: ArrayList<EpisodeDTO> = arrayListOf()
+    private val episodes: ArrayList<EpisodeDto> = arrayListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -46,11 +46,11 @@ class EpisodeAdapter(
     override fun getItemCount(): Int = episodes.size
 
     override fun onClick(view: View) {
-        val episodeDTO = view.tag as EpisodeDTO
+        val episodeDTO = view.tag as EpisodeDto
         actionListener.onEpisodeClick(episodeDTO)
     }
 
-    fun submitUpdate(update: List<EpisodeDTO>) {
+    fun submitUpdate(update: List<EpisodeDto>) {
         val callback = EpisodesDiffCallback(episodes, update)
         val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(callback)
 
@@ -60,8 +60,8 @@ class EpisodeAdapter(
     }
 
     class EpisodesDiffCallback(
-        private val oldLocations: List<EpisodeDTO>,
-        private val newLocations: List<EpisodeDTO>
+        private val oldLocations: List<EpisodeDto>,
+        private val newLocations: List<EpisodeDto>
     ) :
         DiffUtil.Callback() {
         override fun getOldListSize(): Int {
@@ -82,7 +82,7 @@ class EpisodeAdapter(
     }
 
     interface OnEpisodeListener {
-        fun onEpisodeClick(episode: EpisodeDTO)
+        fun onEpisodeClick(episode: EpisodeDto)
     }
 
 }

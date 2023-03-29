@@ -1,6 +1,5 @@
 package com.vk.directop.rickandmortypv.data.mappers
 
-import androidx.room.PrimaryKey
 import com.vk.directop.rickandmortypv.data.entities.CharacterEntity
 import com.vk.directop.rickandmortypv.data.remote.dto.character.CharacterDTO
 import com.vk.directop.rickandmortypv.data.remote.dto.character.Location
@@ -10,13 +9,13 @@ class CharacterEntityMapper {
     fun toCharacterEntity(characterDTO: CharacterDTO): CharacterEntity {
         return CharacterEntity(
             created = characterDTO.created,
-            episode = characterDTO.episode,
+            episode = characterDTO.episode.toString(),
             gender = characterDTO.gender,
             id = characterDTO.id,
             image = characterDTO.image,
-            location = characterDTO.location,
+            location = characterDTO.location.toString(),
             name = characterDTO.name,
-            origin = characterDTO.origin,
+            origin = characterDTO.origin.toString(),
             species = characterDTO.species,
             status = characterDTO.status,
             type = characterDTO.type,
@@ -27,13 +26,13 @@ class CharacterEntityMapper {
     fun toCharacterDTO(characterEntity: CharacterEntity): CharacterDTO {
         return CharacterDTO(
             created = characterEntity.created,
-            episode = characterEntity.episode,
+            episode = characterEntity.episode.lines(),
             gender = characterEntity.gender,
             id = characterEntity.id,
             image = characterEntity.image,
-            location = characterEntity.location,
+            location = Location("characterEntity.location.lines()", ""),
             name = characterEntity.name,
-            origin = characterEntity.origin,
+            origin = Origin("characterEntity.origin.lines()", ""),
             species = characterEntity.species,
             status = characterEntity.status,
             type = characterEntity.type,

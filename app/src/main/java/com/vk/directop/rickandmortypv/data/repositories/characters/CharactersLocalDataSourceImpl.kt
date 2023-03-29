@@ -7,25 +7,40 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class CharactersLocalDataSourceImpl(
+class CharactersLocalDataSourceImpl @Inject constructor(
     private val characterDao: CharacterDao,
     private val dispatcher: CoroutineDispatcher,
     private val characterEntityMapper: CharacterEntityMapper
 ) : CharactersLocalDataSource {
-    override suspend fun characterDb(character: CharacterDTO) = withContext(dispatcher) {
-        characterDao.saveCharacter(characterEntityMapper.toCharacterEntity(character))
-    }
 
-    override suspend fun characterUn(character: CharacterDTO) = withContext(dispatcher) {
+    override suspend fun characterSaveToDb(character: Array<CharacterDTO>) =
+        withContext(dispatcher) {
+            for (element in character) {
+                characterDao.saveCharacter(characterEntityMapper.toCharacterEntity(element))
+            }
+        }
+
+    override suspend fun characterDeleteFromDb(character: CharacterDTO) = withContext(dispatcher) {
         characterDao.deleteCharacter(characterEntityMapper.toCharacterEntity(character))
     }
 
-    override suspend fun getDbCharacters(): Flow<List<CharacterDTO>> {
+    override suspend fun getDbCharacters(charactersParams: CharactersParams): Flow<List<CharacterDTO>> {
         val savedCharactersFlow = characterDao.getSavedCharacters()
-        return savedCharactersFlow.map { list ->
-            list.map { element ->
-                characterEntityMapper.toCharacterDTO(element)
+        return if (charactersParams.name != "") {
+            savedCharactersFlow.map { list ->
+                list.filter {
+                    it.name.uppercase() == charactersParams.name.uppercase()
+                }.map { element ->
+                    characterEntityMapper.toCharacterDTO(element)
+                }
+            }
+        } else {
+            savedCharactersFlow.map { list ->
+                list.map { element ->
+                    characterEntityMapper.toCharacterDTO(element)
+                }
             }
         }
     }

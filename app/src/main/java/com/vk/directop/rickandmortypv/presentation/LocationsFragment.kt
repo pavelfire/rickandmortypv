@@ -1,6 +1,7 @@
 package com.vk.directop.rickandmortypv.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,27 +9,34 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vk.directop.rickandmortypv.R
 import com.vk.directop.rickandmortypv.app.App
 import com.vk.directop.rickandmortypv.contract.HasCustomTitle
 import com.vk.directop.rickandmortypv.data.remote.dto.location.LocationDTO
 import com.vk.directop.rickandmortypv.databinding.FragmentLocationsBinding
+import javax.inject.Inject
 
 class LocationsFragment : Fragment(), HasCustomTitle {
 
     private lateinit var binding: FragmentLocationsBinding
     private lateinit var locationAdapter: LocationAdapter
 
-    private val locationsViewModel: LocationsViewModel by viewModels {
-        LocationsViewModel.LocationsViewModelFactory(
-            ((requireActivity().application) as App).getLocationsUseCase,
-            ((requireActivity().application) as App).getLocationsRxUseCase
-        )
-    }
+    @Inject
+    lateinit var locationsViewModelFactory: LocationsViewModel.LocationsViewModelFactory
+
+    private lateinit var locationsViewModel: LocationsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ((requireActivity().application) as App).appComponent.inject(this)
+
+        locationsViewModel = ViewModelProvider(this, locationsViewModelFactory)
+            .get(LocationsViewModel::class.java)
 
         locationAdapter = LocationAdapter(
             object : LocationAdapter.OnLocationListener {
@@ -42,7 +50,8 @@ class LocationsFragment : Fragment(), HasCustomTitle {
                 }
             })
 
-        locationsViewModel.getLocations(locationsViewModel.searchFilter.value.toString())
+        //locationsViewModel.getLocations(locationsViewModel.searchFilter.value.toString())
+        locationsViewModel.getLocationsRx(locationsViewModel.searchFilter.value.toString())
     }
 
     override fun onCreateView(
@@ -91,6 +100,22 @@ class LocationsFragment : Fragment(), HasCustomTitle {
             adapter = locationAdapter
             layoutManager = GridLayoutManager(context, COLUMNS_COUNT)
         }
+
+        val layoutManager = binding.list.layoutManager as LinearLayoutManager
+        binding.list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val totalItemCount = layoutManager.itemCount
+                val visibleItemCount = layoutManager.childCount
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+
+                locationsViewModel.scrollMore(
+                    totalItemCount,
+                    visibleItemCount,
+                    lastVisibleItem
+                )
+            }
+        })
 
         locationsViewModel.error.observe(viewLifecycleOwner) {
             Toast.makeText(

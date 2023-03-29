@@ -1,7 +1,7 @@
 package com.vk.directop.rickandmortypv.data.remote.dto.character
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Origin(
