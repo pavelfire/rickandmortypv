@@ -32,8 +32,6 @@ class LocationsViewModel(
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    private val _remoteLocations = arrayListOf<LocationDTO>()
-
     private val _searchFilter = MutableLiveData("")
     val searchFilter: LiveData<String> = _searchFilter
 
@@ -44,53 +42,14 @@ class LocationsViewModel(
 
         _searchFilter.value = text
 
-        if (sendButton) getLocations(_searchFilter.value.toString())
+        if (sendButton) getLocationsRx(_searchFilter.value.toString())
         else {
             editTextSubject.onNext(text)
             editTextSubject
                 .debounce(2000, TimeUnit.MILLISECONDS)
                 .subscribe {
-                    getLocations(_searchFilter.value.toString())
+                    getLocationsRx(_searchFilter.value.toString())
                 }
-        }
-    }
-
-    fun getLocations(queryString: String) {
-
-        viewModelScope.launch {
-            val locationsFlow = getLocationsFlowUseCase.invoke(queryString)
-            locationsFlow.collect {
-                _locations.map {
-                    _locations.value = (_locations.value as ArrayList<LocationDTO>).plus(it)
-                }
-                _dataLoading.postValue(false)
-            }
-        }
-        viewModelScope.launch {
-            _dataLoading.postValue(true)
-            when (val locationsResult = getLocationsUseCase.invoke(queryString)) {
-                is Resultss.Success -> {
-                    _remoteLocations.clear()
-                    _remoteLocations.addAll(locationsResult.data)
-
-                    _locations.value = _remoteLocations
-                    _dataLoading.postValue(false)
-
-                    val locationsFlow = getLocationsFlowUseCase.invoke(queryString)
-                    locationsFlow.collect {
-                        _locations.map {
-                            _locations.value = (_locations.value as ArrayList<LocationDTO>).plus(it)
-                        }
-                        _dataLoading.postValue(false)
-                    }
-                }
-                is Resultss.Error -> {
-                    _dataLoading.postValue(false)
-                    _locations.value = emptyList()
-                    _error.postValue(locationsResult.exception.message)
-                    _dataLoading.postValue(false)
-                }
-            }
         }
     }
 
