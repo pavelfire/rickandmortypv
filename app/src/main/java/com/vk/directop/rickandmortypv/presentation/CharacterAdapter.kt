@@ -13,7 +13,8 @@ import com.vk.directop.rickandmortypv.databinding.CharacterItemBinding
 
 class CharacterAdapter(
     private val actionListener: OnCharacterListener
-) : RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder>(), View.OnClickListener {
+) : RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder>()//, View.OnClickListener
+{
 
     inner class CharacterViewHolder(val binding: CharacterItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -60,10 +61,10 @@ class CharacterAdapter(
 
     override fun getItemCount(): Int = characters.size
 
-    override fun onClick(view: View) {
-        val characterDTO = view.tag as CharacterDTO
-        actionListener.onCharacterClick(characterDTO)
-    }
+//    override fun onClick(view: View) {
+//        val characterDTO = view.tag as CharacterDTO
+//        actionListener.onCharacterClick(characterDTO)
+//    }
 
     fun submitUpdate(update: List<CharacterDTO>) {
         val callback = CharactersDiffCallback(characters, update)
