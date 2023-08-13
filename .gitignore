@@ -14,8 +14,9 @@
 .cxx
 local.properties
 /.idea/vcs.xml
-/.idea
+/.idea/
 /app/release/rick marty.apk
 /app/release/output-metadata.json
-
+/build/
+/dradle/
 /app/release/app-release.apk
